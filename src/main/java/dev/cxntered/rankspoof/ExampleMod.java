@@ -1,4 +1,4 @@
-package com.github.cxntered.rankspoof;
+package dev.cxntered.rankspoof;
 
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.Mod;
