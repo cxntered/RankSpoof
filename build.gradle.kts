@@ -80,8 +80,6 @@ dependencies {
 
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
     modImplementation("gg.essential:vigilance-1.8.9-forge:299")
-    shadowImpl("gg.essential:elementa-1.8.9-forge:652")
-    shadowImpl("gg.essential:universalcraft-1.8.9-forge:344")
 }
 
 // Tasks:
@@ -139,10 +137,6 @@ tasks.shadowJar {
 
     // If you want to include other dependencies and shadow them, you can relocate them in here
     fun relocate(name: String) = relocate(name, "$baseGroup.deps.$name")
-
-//    relocate("gg.essential.vigilance")
-//    relocate("gg.essential.elementa")
-//    relocate("gg.essential.universalcraft")
 }
 
 tasks.assemble.get().dependsOn(tasks.remapJar)
