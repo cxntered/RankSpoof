@@ -1,8 +1,7 @@
-package dev.cxntered.rankspoof.commands;
+package dev.cxntered.rankspoof.command;
 
-import dev.cxntered.rankspoof.RankSpoof;
 import dev.cxntered.rankspoof.config.Config;
-import gg.essential.universal.UScreen;
+import gg.essential.api.EssentialAPI;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 
@@ -24,6 +23,6 @@ public class RankSpoofCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        RankSpoof.screenToOpenNextTick = Config.getInstance().gui();
+        EssentialAPI.getGuiUtil().openScreen(Config.getInstance().gui());
     }
 }
