@@ -12,8 +12,9 @@ public abstract class MixinGuiIngame {
     private String rankspoof$spoofScoreboardRank(String string) {
         if (Config.getInstance().enabled && string.matches("Rank: .+")) {
             String rank = Config.getInstance().spoofedRank
-                    .replaceAll("&", "§")
-                    .replaceAll("[\\[\\]]", "");
+                    .replace('&', '§')
+                    .replace("[", "")
+                    .replace("]", "");
             string = "Rank: " + rank;
         }
 

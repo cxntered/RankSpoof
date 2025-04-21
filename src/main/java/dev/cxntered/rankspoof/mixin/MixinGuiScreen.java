@@ -31,8 +31,9 @@ public abstract class MixinGuiScreen {
             if (!matcher.find()) return;
 
             String rank = Config.getInstance().spoofedRank
-                    .replaceAll("&", "§")
-                    .replaceAll("[\\[\\]]", "");
+                    .replace('&', '§')
+                    .replace("[", "")
+                    .replace("]", "");
             list.set(i, "§7Rank: " + rank);
         }
     }
