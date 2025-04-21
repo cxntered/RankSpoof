@@ -20,6 +20,8 @@ public class RankSpoof {
 
     public static String getSpoofedText(String text) {
         String username = UMinecraft.getMinecraft().getSession().getProfile().getName();
+        if (!text.contains(username) || text.matches("(?:§r)?§[a-z0-9]§l[A-Z](?:§r)? .*")) return text;
+
         String rank = Config.getInstance().spoofedRank.replaceAll("&", "§");
 
         String rankRegex = "\\[[A-Za-z§0-9+]+] " + Pattern.quote(username);
