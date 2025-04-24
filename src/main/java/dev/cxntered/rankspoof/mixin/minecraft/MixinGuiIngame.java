@@ -1,4 +1,4 @@
-package dev.cxntered.rankspoof.mixin;
+package dev.cxntered.rankspoof.mixin.minecraft;
 
 import dev.cxntered.rankspoof.config.Config;
 import net.minecraft.client.gui.GuiIngame;
@@ -15,7 +15,7 @@ public abstract class MixinGuiIngame {
                     .replace('&', '§')
                     .replace("[", "")
                     .replace("]", "");
-            string = "Rank: " + rank;
+            return "Rank: " + rank;
         }
 
         return string;
