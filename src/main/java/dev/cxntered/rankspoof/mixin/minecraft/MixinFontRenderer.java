@@ -1,4 +1,4 @@
-package dev.cxntered.rankspoof.mixin;
+package dev.cxntered.rankspoof.mixin.minecraft;
 
 import dev.cxntered.rankspoof.RankSpoof;
 import dev.cxntered.rankspoof.config.Config;
@@ -11,23 +11,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class MixinFontRenderer {
     @ModifyVariable(method = "renderString", at = @At("HEAD"), argsOnly = true)
     private String rankspoof$spoofRenderString(String string) {
-        if (string == null)
-            return null;
-
-        if (Config.getInstance().enabled)
-            string = RankSpoof.getSpoofedText(string);
-
+        if (string == null) return null;
+        if (Config.getInstance().enabled) return RankSpoof.getSpoofedText(string);
         return string;
     }
 
     @ModifyVariable(method = "getStringWidth", at = @At("HEAD"), argsOnly = true)
     private String rankspoof$spoofGetStringWidth(String string) {
-        if (string == null)
-            return null;
-
-        if (Config.getInstance().enabled)
-            string = RankSpoof.getSpoofedText(string);
-
+        if (string == null) return null;
+        if (Config.getInstance().enabled) return RankSpoof.getSpoofedText(string);
         return string;
     }
 }

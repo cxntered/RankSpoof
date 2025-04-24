@@ -1,4 +1,4 @@
-package dev.cxntered.rankspoof.mixin;
+package dev.cxntered.rankspoof.mixin.minecraft;
 
 import dev.cxntered.rankspoof.config.Config;
 import net.minecraft.client.gui.GuiScreen;
