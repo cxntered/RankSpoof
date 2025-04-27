@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "rankspoof",
+	"version": "${version}",
+	"name": "RankSpoof",
+	"description": "A mod to spoof your Hypixel Rank.",
+	"authors": [
+		"cxntered"
+	],
+	"contact": {
+		"homepage": "https://cxntered.dev",
+		"sources": "https://github.com/cxntered/RankSpoof/tree/modern"
+	},
+	"license": "Unlicense",
+	"icon": "assets/rankspoof/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"dev.cxntered.rankspoof.RankSpoof"
+		]
+	},
+	"mixins": [
+		"rankspoof.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
