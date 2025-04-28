@@ -29,6 +29,9 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+	implementation "net.kyori:adventure-api:4.20.0"
+	implementation "net.kyori:adventure-text-serializer-legacy:4.20.0"
+
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }

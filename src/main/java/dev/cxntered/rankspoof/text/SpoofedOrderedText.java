@@ -1,50 +1,47 @@
 package dev.cxntered.rankspoof.text;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.text.CharacterVisitor;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.util.Formatting;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.text.TextVisitFactory;
 
 public class SpoofedOrderedText implements OrderedText {
-    private final List<StyledCharacter> styledCharacters = new ArrayList<>(64);
+    private final TextComponent.Builder text = Component.text();
+    private final String string;
 
     public SpoofedOrderedText(OrderedText original) {
-        List<StyledCharacter> originalCharacters = new ArrayList<>(64);
-
         original.accept((index, style, codePoint) -> {
-            originalCharacters.add(new StyledCharacter(codePoint, style));
+            text.append(Component.text()
+                    .content(String.valueOf(Character.toChars(codePoint)))
+                    .style(mcToAdventureStyle(style)));
             return true;
         });
 
-//        StringBuilder stringBuilder = new StringBuilder();
-        for (StyledCharacter sc : originalCharacters) {
-//            stringBuilder.append(Character.toChars(sc.codePoint()));
-//            if (sc.codePoint() == 'a') {
-//                String text = "HELP";
-//                for (int j = 0; j < text.length(); j++) {
-//                    char c = text.charAt(j);
-//                    styledCharacters.add(new StyledCharacter(c, Style.EMPTY.withColor(Formatting.DARK_RED).withBold(true)));
-//                }
-//            } else {
-                styledCharacters.add(new StyledCharacter(sc.codePoint(), sc.style()));
-//            }
-        }
-//        String string = stringBuilder.toString();
-//        System.out.println("Original string: " + string);
+        string = LegacyComponentSerializer.legacySection().serialize(text.build());
     }
 
     @Override
     public boolean accept(CharacterVisitor visitor) {
-        for (int i = 0; i < styledCharacters.size(); i++) {
-            StyledCharacter sc = styledCharacters.get(i);
-            if (!visitor.accept(i, sc.style, sc.codePoint)) return false;
-        }
-        return true;
+        return TextVisitFactory.visitFormatted(
+                string,
+                net.minecraft.text.Style.EMPTY,
+                visitor
+        );
     }
 
-    private record StyledCharacter(int codePoint, Style style) {
+    private Style mcToAdventureStyle(net.minecraft.text.Style mcStyle) {
+        return Style.style()
+                .decoration(TextDecoration.BOLD, mcStyle.isBold())
+                .decoration(TextDecoration.ITALIC, mcStyle.isItalic())
+                .decoration(TextDecoration.UNDERLINED, mcStyle.isUnderlined())
+                .decoration(TextDecoration.STRIKETHROUGH, mcStyle.isStrikethrough())
+                .decoration(TextDecoration.OBFUSCATED, mcStyle.isObfuscated())
+                .color(mcStyle.getColor() != null ? TextColor.color(mcStyle.getColor().getRgb()) : null)
+                .build();
     }
 }
