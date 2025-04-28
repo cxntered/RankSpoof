@@ -10,8 +10,8 @@ import dev.isxander.yacl3.platform.YACLPlatform;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-public class Config {
-    public static final ConfigClassHandler<Config> CONFIG = ConfigClassHandler.createBuilder(Config.class)
+public class ModConfig {
+    public static final ConfigClassHandler<ModConfig> CONFIG = ConfigClassHandler.createBuilder(ModConfig.class)
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
                     .setPath(YACLPlatform.getConfigDir().resolve("rankspoof.json"))
                     .build())

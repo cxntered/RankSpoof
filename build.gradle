@@ -11,6 +11,7 @@ base {
 }
 
 repositories {
+	mavenCentral()
 	maven {
 		name 'Xander Maven'
 		url 'https://maven.isxander.dev/releases'
@@ -29,7 +30,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
-	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 processResources {
