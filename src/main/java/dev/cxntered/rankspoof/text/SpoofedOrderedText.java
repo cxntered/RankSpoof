@@ -1,5 +1,6 @@
 package dev.cxntered.rankspoof.text;
 
+import dev.cxntered.rankspoof.RankSpoof;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.Style;
@@ -14,15 +15,15 @@ public class SpoofedOrderedText implements OrderedText {
     private final TextComponent.Builder text = Component.text();
     private final String string;
 
-    public SpoofedOrderedText(OrderedText original) {
-        original.accept((index, style, codePoint) -> {
+    public SpoofedOrderedText(OrderedText orderedText) {
+        orderedText.accept((index, style, codePoint) -> {
             text.append(Component.text()
                     .content(String.valueOf(Character.toChars(codePoint)))
                     .style(mcToAdventureStyle(style)));
             return true;
         });
 
-        string = LegacyComponentSerializer.legacySection().serialize(text.build());
+        string = RankSpoof.getSpoofedText(LegacyComponentSerializer.legacySection().serialize(text.build()));
     }
 
     @Override
