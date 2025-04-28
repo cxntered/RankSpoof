@@ -4,13 +4,12 @@ import dev.cxntered.rankspoof.config.ModConfig;
 import dev.cxntered.rankspoof.text.SpoofedOrderedText;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.StringVisitable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(TextRenderer.class)
-public class TextRendererMixin {
+public abstract class TextRendererMixin {
     @ModifyVariable(
             method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
             at = @At(value = "HEAD"),
@@ -26,18 +25,8 @@ public class TextRendererMixin {
             at = @At(value = "HEAD"),
             argsOnly = true
     )
-    private OrderedText spoofGetWidthOrderedText(OrderedText orderedText) {
+    private OrderedText spoofGetWidth(OrderedText orderedText) {
         if (ModConfig.CONFIG.instance().enabled) return new SpoofedOrderedText(orderedText);
         return orderedText;
-    }
-
-    @ModifyVariable(
-            method = "getWidth(Lnet/minecraft/text/StringVisitable;)I",
-            at = @At(value = "HEAD"),
-            argsOnly = true
-    )
-    private StringVisitable spoofGetWidthStringVisitable(StringVisitable stringVisitable) {
-        // TODO: implement spoofing somehow (doesn't seem to provide styles)
-        return stringVisitable;
     }
 }

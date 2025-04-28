@@ -3,7 +3,8 @@
 	"package": "dev.cxntered.rankspoof.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"TextRendererMixin"
+		"TextRendererMixin",
+		"PlayerListHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
