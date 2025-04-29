@@ -5,7 +5,8 @@
 	"client": [
 		"TextRendererMixin",
 		"PlayerListHudMixin",
-		"InGameHudMixin"
+		"InGameHudMixin",
+		"OrderedTextTooltipComponentMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

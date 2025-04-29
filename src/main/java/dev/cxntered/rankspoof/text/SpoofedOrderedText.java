@@ -12,18 +12,10 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.TextVisitFactory;
 
 public class SpoofedOrderedText implements OrderedText {
-    private final TextComponent.Builder text = Component.text();
     private final String string;
 
     public SpoofedOrderedText(OrderedText orderedText) {
-        orderedText.accept((index, style, codePoint) -> {
-            text.append(Component.text()
-                    .content(String.valueOf(Character.toChars(codePoint)))
-                    .style(mcToAdventureStyle(style)));
-            return true;
-        });
-
-        string = RankSpoof.getSpoofedText(LegacyComponentSerializer.legacySection().serialize(text.build()));
+        string = RankSpoof.getSpoofedText(getFormattedString(orderedText));
     }
 
     @Override
@@ -35,7 +27,20 @@ public class SpoofedOrderedText implements OrderedText {
         );
     }
 
-    private Style mcToAdventureStyle(net.minecraft.text.Style mcStyle) {
+    public static String getFormattedString(OrderedText orderedText) {
+        final TextComponent.Builder text = Component.text();
+
+        orderedText.accept((index, style, codePoint) -> {
+            text.append(Component.text()
+                    .content(String.valueOf(Character.toChars(codePoint)))
+                    .style(mcToAdventureStyle(style)));
+            return true;
+        });
+
+        return LegacyComponentSerializer.legacySection().serialize(text.build());
+    }
+
+    private static Style mcToAdventureStyle(net.minecraft.text.Style mcStyle) {
         return Style.style()
                 .decoration(TextDecoration.BOLD, mcStyle.isBold())
                 .decoration(TextDecoration.ITALIC, mcStyle.isItalic())

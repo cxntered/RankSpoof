@@ -15,7 +15,7 @@ public abstract class InGameHudMixin {
             index = 6
     )
     private Text spoofScoreboardRank(Text text) {
-        if (ModConfig.CONFIG.instance().enabled && text.getString().matches("Rank: .+")) {
+        if (ModConfig.CONFIG.instance().enabled && text.getString().startsWith("Rank: ")) {
             String rank = ModConfig.CONFIG.instance().spoofedRank
                     .replace('&', '§')
                     .replace("[", "")
