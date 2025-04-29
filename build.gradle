@@ -32,8 +32,10 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	implementation "net.kyori:adventure-api:4.20.0"
-	implementation "net.kyori:adventure-text-serializer-legacy:4.20.0"
+	implementation include("net.kyori:adventure-api:${project.adventure_version}")
+	implementation include("net.kyori:adventure-key:${project.adventure_version}")
+	implementation include("net.kyori:adventure-text-serializer-legacy:${project.adventure_version}")
+	implementation include("net.kyori:examination-api:${project.examination_version}")
 
 	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${project.devauth_version}"
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
