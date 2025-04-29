@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"TextRendererMixin",
-		"PlayerListHudMixin"
+		"PlayerListHudMixin",
+		"InGameHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
