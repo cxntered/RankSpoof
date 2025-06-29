@@ -1,6 +1,7 @@
 package dev.cxntered.rankspoof.mixin;
 
 import dev.cxntered.rankspoof.config.ModConfig;
+import dev.cxntered.rankspoof.config.RankPreview;
 import dev.cxntered.rankspoof.text.SpoofedOrderedText;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.OrderedText;
@@ -24,7 +25,7 @@ public abstract class TextRendererMixin {
             argsOnly = true
     )
     private OrderedText spoofPrepare(OrderedText orderedText) {
-        if (ModConfig.CONFIG.instance().enabled) return new SpoofedOrderedText(orderedText);
+        if (ModConfig.CONFIG.instance().enabled && !RankPreview.isRendering) return new SpoofedOrderedText(orderedText);
         return orderedText;
     }
 
@@ -34,7 +35,7 @@ public abstract class TextRendererMixin {
             argsOnly = true
     )
     private OrderedText spoofGetWidthOrderedText(OrderedText orderedText) {
-        if (ModConfig.CONFIG.instance().enabled) return new SpoofedOrderedText(orderedText);
+        if (ModConfig.CONFIG.instance().enabled && !RankPreview.isRendering) return new SpoofedOrderedText(orderedText);
         return orderedText;
     }
 
