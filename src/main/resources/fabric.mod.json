@@ -8,8 +8,9 @@
 		"cxntered"
 	],
 	"contact": {
-		"homepage": "https://cxntered.dev",
-		"sources": "https://github.com/cxntered/RankSpoof/tree/modern"
+		"homepage": "https://modrinth.com/mod/rankspoof",
+		"sources": "https://github.com/cxntered/RankSpoof/tree/modern",
+		"issues": "https://github.com/cxntered/RankSpoof/issues"
 	},
 	"license": "Unlicense",
 	"icon": "assets/rankspoof/icon.png",
@@ -27,9 +28,16 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
-		"minecraft": "~1.21.4",
+		"minecraft": "~1.21.6",
 		"java": ">=21",
 		"fabric-api": "*",
-		"yet_another_config_lib_v3": ">=3.6.6"
+		"yet_another_config_lib_v3": ">=3.7.1"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.modrinth": "https://modrinth.com/mod/rankspoof"
+			}
+		}
 	}
 }

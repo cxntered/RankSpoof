@@ -19,11 +19,11 @@ public abstract class TextRendererMixin {
     public abstract int getWidth(OrderedText text);
 
     @ModifyVariable(
-            method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
+            method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
             at = @At(value = "HEAD"),
             argsOnly = true
     )
-    private OrderedText spoofDrawLayer(OrderedText orderedText) {
+    private OrderedText spoofPrepare(OrderedText orderedText) {
         if (ModConfig.CONFIG.instance().enabled) return new SpoofedOrderedText(orderedText);
         return orderedText;
     }
