@@ -5,11 +5,9 @@ import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class is used to convert to and from legacy formatting codes (i.e. codes starting with '§').
@@ -22,24 +20,15 @@ public class LegacyFormatting {
      * @return A string with legacy formatting.
      */
     public static String toLegacy(StringVisitable stringVisitable) {
-        List<Pair<String, Style>> components = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        AtomicReference<Style> lastFormatting = new AtomicReference<>(Style.EMPTY);
+
         stringVisitable.visit((style, string) -> {
-            components.add(new Pair<>(string, style));
+            String formatting = getFormattingCodes(style, lastFormatting.get());
+            builder.append(formatting).append(string);
+            lastFormatting.set(style);
             return Optional.empty();
         }, Style.EMPTY);
-
-        StringBuilder builder = new StringBuilder();
-        Style lastFormatting = Style.EMPTY;
-
-        for (Pair<String, Style> component : components) {
-            String string = component.getLeft();
-            Style style = component.getRight();
-
-            String formatting = getFormattingCodes(style, lastFormatting);
-            builder.append(formatting).append(string);
-
-            lastFormatting = style;
-        }
 
         return builder.toString();
     }
