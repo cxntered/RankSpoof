@@ -1,5 +1,7 @@
 package dev.cxntered.rankspoof.text;
 
+import net.minecraft.text.MutableText;
+import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -14,14 +16,14 @@ import java.util.Optional;
  */
 public class LegacyFormatting {
     /**
-     * Converts a Text object to a legacy formatted string.
+     * Converts a StringVisitable object to a legacy formatted string.
      *
-     * @param text The Text object to convert.
+     * @param stringVisitable The StringVisitable object to convert.
      * @return A string with legacy formatting.
      */
-    public static String toLegacy(Text text) {
+    public static String toLegacy(StringVisitable stringVisitable) {
         List<Pair<String, Style>> components = new ArrayList<>();
-        text.visit((style, string) -> {
+        stringVisitable.visit((style, string) -> {
             components.add(new Pair<>(string, style));
             return Optional.empty();
         }, Style.EMPTY);
@@ -40,6 +42,59 @@ public class LegacyFormatting {
         }
 
         return builder.toString();
+    }
+
+    /**
+     * Converts a legacy formatted string to a StringVisitable object.
+     *
+     * @param string The legacy formatted string to convert.
+     * @return A StringVisitable object with the equivalent formatting.
+     */
+    public static StringVisitable fromLegacy(String string) {
+        if (string == null || string.isEmpty()) {
+            return Text.empty();
+        }
+
+        MutableText text = Text.empty();
+        StringBuilder currentSegment = new StringBuilder();
+        Style currentStyle = Style.EMPTY;
+
+        for (int i = 0; i < string.length(); i++) {
+            char currentChar = string.charAt(i);
+
+            if (currentChar == '§' && i + 1 < string.length()) {
+                if (!currentSegment.isEmpty()) {
+                    text.append(Text.literal(currentSegment.toString()).setStyle(currentStyle));
+                    currentSegment.setLength(0);
+                }
+
+                Formatting format = Formatting.byCode(string.charAt(++i));
+                if (format == null) continue;
+
+                if (format == Formatting.RESET) {
+                    currentStyle = Style.EMPTY;
+                } else if (format.isColor()) {
+                    currentStyle = currentStyle.withColor(format);
+                } else {
+                    currentStyle = switch (format) {
+                        case BOLD -> currentStyle.withBold(true);
+                        case ITALIC -> currentStyle.withItalic(true);
+                        case UNDERLINE -> currentStyle.withUnderline(true);
+                        case STRIKETHROUGH -> currentStyle.withStrikethrough(true);
+                        case OBFUSCATED -> currentStyle.withObfuscated(true);
+                        default -> currentStyle;
+                    };
+                }
+            } else {
+                currentSegment.append(currentChar);
+            }
+        }
+
+        if (!currentSegment.isEmpty()) {
+            text.append(Text.literal(currentSegment.toString()).setStyle(currentStyle));
+        }
+
+        return text;
     }
 
     /**
