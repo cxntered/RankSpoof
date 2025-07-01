@@ -113,7 +113,7 @@ public class LegacyFormatting {
             formatting.append(Formatting.RESET);
         }
 
-        if (style.getColor() != null) {
+        if (style.getColor() != null && !style.getColor().equals(lastFormatting.getColor())) {
             Formatting colorCode = Formatting.byName(style.getColor().getName());
             if (colorCode != null) {
                 formatting.append(colorCode);
