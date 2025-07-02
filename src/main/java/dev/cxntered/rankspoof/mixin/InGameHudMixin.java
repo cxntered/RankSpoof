@@ -20,7 +20,7 @@ public abstract class InGameHudMixin {
                     .replace('&', '§')
                     .replace("[", "")
                     .replace("]", "");
-            return Text.of("Rank: " + rank);
+            return Text.literal("Rank: " + rank);
         }
         return text;
     }

@@ -1,7 +1,7 @@
 package dev.cxntered.rankspoof.mixin;
 
 import dev.cxntered.rankspoof.config.ModConfig;
-import dev.cxntered.rankspoof.text.SpoofedOrderedText;
+import dev.cxntered.rankspoof.text.LegacyFormatting;
 import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -23,13 +23,13 @@ public abstract class OrderedTextTooltipComponentMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void spoofTooltipRank(OrderedText text, CallbackInfo ci) {
         if (ModConfig.CONFIG.instance().enabled) {
-            String string = SpoofedOrderedText.getFormattedString(text);
+            String string = LegacyFormatting.toLegacy(text);
             if (string.startsWith("§7Rank: ")) {
                 String rank = ModConfig.CONFIG.instance().spoofedRank
                         .replace('&', '§')
                         .replace("[", "")
                         .replace("]", "");
-                this.text = Text.of("§7Rank: §r" + rank).asOrderedText();
+                this.text = Text.literal("§7Rank: §r" + rank).asOrderedText();
             }
         }
     }

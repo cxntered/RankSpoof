@@ -19,9 +19,9 @@ public class RankPreview implements ImageRenderer {
         isRendering = true;
 
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        String text = (rank.isEmpty() ? "" : rank.replace('&', '§') + " ") + MinecraftClient.getInstance().getSession().getUsername();
+        String rankPreview = (rank.isEmpty() ? "" : rank.replace('&', '§') + " ") + MinecraftClient.getInstance().getSession().getUsername();
 
-        List<OrderedText> lines = textRenderer.wrapLines(Text.of(text), width - 10);
+        List<OrderedText> lines = textRenderer.wrapLines(Text.literal(rankPreview), width - 10);
         int textHeight = lines.size() * textRenderer.fontHeight;
         int totalHeight = textHeight + 10;
 

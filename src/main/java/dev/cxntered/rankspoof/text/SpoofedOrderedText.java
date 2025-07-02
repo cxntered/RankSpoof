@@ -7,7 +7,7 @@ public class SpoofedOrderedText implements OrderedText {
     private final String string;
 
     public SpoofedOrderedText(OrderedText orderedText) {
-        string = RankSpoof.getSpoofedText(getFormattedString(orderedText));
+        string = RankSpoof.getSpoofedText(LegacyFormatting.toLegacy(orderedText));
     }
 
     @Override
@@ -17,16 +17,5 @@ public class SpoofedOrderedText implements OrderedText {
                 net.minecraft.text.Style.EMPTY,
                 visitor
         );
-    }
-
-    public static String getFormattedString(OrderedText orderedText) {
-        MutableText text = Text.empty();
-
-        orderedText.accept((index, style, codePoint) -> {
-            text.append(Text.literal(Character.toString(codePoint)).setStyle(style));
-            return true;
-        });
-
-        return LegacyFormatting.toLegacy(text);
     }
 }

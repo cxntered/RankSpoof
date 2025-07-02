@@ -1,9 +1,6 @@
 package dev.cxntered.rankspoof.text;
 
-import net.minecraft.text.MutableText;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 
 import java.util.Optional;
@@ -31,6 +28,23 @@ public class LegacyFormatting {
         }, Style.EMPTY);
 
         return builder.toString();
+    }
+
+    /**
+     * Converts an OrderedText object to a legacy formatted string.
+     *
+     * @param orderedText The OrderedText object to convert.
+     * @return A string with legacy formatting.
+     */
+    public static String toLegacy(OrderedText orderedText) {
+        MutableText text = Text.empty();
+
+        orderedText.accept((index, style, codePoint) -> {
+            text.append(Text.literal(Character.toString(codePoint)).setStyle(style));
+            return true;
+        });
+
+        return toLegacy(text);
     }
 
     /**
@@ -124,7 +138,7 @@ public class LegacyFormatting {
      *
      * @param style          The current style.
      * @param lastFormatting The last formatting applied.
-     * @return True if a reset is needed, false if not.
+     * @return {@code true} if a reset is needed, {@code false} otherwise.
      */
     private static boolean needsReset(Style style, Style lastFormatting) {
         // check if any formatting is removed
