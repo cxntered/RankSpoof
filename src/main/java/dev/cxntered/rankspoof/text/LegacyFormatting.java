@@ -37,14 +37,17 @@ public class LegacyFormatting {
      * @return A string with legacy formatting.
      */
     public static String toLegacy(OrderedText orderedText) {
-        MutableText text = Text.empty();
+        StringBuilder builder = new StringBuilder();
+        AtomicReference<Style> lastFormatting = new AtomicReference<>(Style.EMPTY);
 
         orderedText.accept((index, style, codePoint) -> {
-            text.append(Text.literal(Character.toString(codePoint)).setStyle(style));
+            String formatting = getFormattingCodes(style, lastFormatting.get());
+            builder.append(formatting).append(Character.toString(codePoint));
+            lastFormatting.set(style);
             return true;
         });
 
-        return toLegacy(text);
+        return builder.toString();
     }
 
     /**

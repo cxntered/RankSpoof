@@ -54,6 +54,6 @@ public class RankSpoof implements ModInitializer {
         String quotedUsername = Pattern.quote(username);
         rankPattern = Pattern.compile("\\[[A-Za-z§0-9+]+] " + quotedUsername); // matches rank & username, e.g. "§b[MVP§3+§b] cxntered"
         noRankPattern = Pattern.compile("(§r§7|§7)" + quotedUsername); // matches username without rank, e.g. "§7cxntered"
-        playerPattern = Pattern.compile("[a-f0-9§]{2}" + quotedUsername); // matches rank color, e.g. "§b[MVP§3+§b] cxntered" -> "§b"
+        playerPattern = Pattern.compile("[a-f0-9§]{2}" + quotedUsername); // matches username with only rank color, e.g. "§bcxntered"
     }
 }
