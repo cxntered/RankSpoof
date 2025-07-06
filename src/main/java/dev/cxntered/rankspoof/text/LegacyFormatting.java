@@ -125,11 +125,11 @@ public class LegacyFormatting {
                 formatting.append(colorCode);
             }
         }
-        if (style.isBold()) formatting.append(Formatting.BOLD);
-        if (style.isItalic()) formatting.append(Formatting.ITALIC);
-        if (style.isUnderlined()) formatting.append(Formatting.UNDERLINE);
-        if (style.isStrikethrough()) formatting.append(Formatting.STRIKETHROUGH);
-        if (style.isObfuscated()) formatting.append(Formatting.OBFUSCATED);
+        if (style.isBold() && !lastFormatting.isBold()) formatting.append(Formatting.BOLD);
+        if (style.isItalic() && !lastFormatting.isItalic()) formatting.append(Formatting.ITALIC);
+        if (style.isUnderlined() && !lastFormatting.isUnderlined()) formatting.append(Formatting.UNDERLINE);
+        if (style.isStrikethrough() && !lastFormatting.isStrikethrough()) formatting.append(Formatting.STRIKETHROUGH);
+        if (style.isObfuscated() && !lastFormatting.isObfuscated()) formatting.append(Formatting.OBFUSCATED);
 
         return formatting.toString();
     }
