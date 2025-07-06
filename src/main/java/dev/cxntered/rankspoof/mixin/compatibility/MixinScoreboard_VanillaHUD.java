@@ -6,13 +6,12 @@ import net.minecraft.scoreboard.Team;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Pseudo
 @Mixin(targets = "org.polyfrost.vanillahud.hud.Scoreboard$ScoreboardHUD", remap = false)
-public abstract class ScoreboardMixin_VanillaHUD {
+public abstract class MixinScoreboard_VanillaHUD {
     @Dynamic("VanillaHUD")
     @Redirect(
             method = "renderObjective",
