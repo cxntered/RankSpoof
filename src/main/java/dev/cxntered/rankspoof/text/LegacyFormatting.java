@@ -114,12 +114,10 @@ public class LegacyFormatting {
         if (style.equals(lastFormatting)) return "";
 
         StringBuilder formatting = new StringBuilder();
+        boolean needsReset = needsReset(style, lastFormatting);
 
-        if (needsReset(style, lastFormatting)) {
-            formatting.append(Formatting.RESET);
-        }
-
-        if (style.getColor() != null && !style.getColor().equals(lastFormatting.getColor())) {
+        if (needsReset) formatting.append(Formatting.RESET);
+        if (style.getColor() != null && (needsReset || !style.getColor().equals(lastFormatting.getColor()))) {
             Formatting colorCode = Formatting.byName(style.getColor().getName());
             if (colorCode != null) {
                 formatting.append(colorCode);
