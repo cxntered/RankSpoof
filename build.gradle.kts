@@ -28,7 +28,7 @@ loom {
     launchConfigs {
         "client" {
             property("mixin.debug", "true")
-            arg("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
+            arg("--tweakClass", "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker")
             arg("--mixin", "mixins.$modid.json")
         }
     }
@@ -61,6 +61,7 @@ repositories {
     maven("https://repo.spongepowered.org/maven/")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven("https://repo.essential.gg/repository/maven-public")
+    maven("https://repo.polyfrost.org/releases")
 }
 
 val shadowImpl: Configuration by configurations.creating {
@@ -76,12 +77,10 @@ dependencies {
         isTransitive = false
     }
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
-
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
 
-    modImplementation("gg.essential:vigilance-1.8.9-forge:299")
-    shadowImpl("gg.essential:loader-launchwrapper:1.2.3")
-    modCompileOnly("gg.essential:essential-1.8.9-forge:17141+gd6f4cfd3a8")
+    compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.2-alpha+")
+    shadowImpl("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+")
 }
 
 // Tasks:
@@ -96,7 +95,7 @@ tasks.withType(org.gradle.jvm.tasks.Jar::class) {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
 
-        this["TweakClass"] = "gg.essential.loader.stage0.EssentialSetupTweaker"
+        this["TweakClass"] = "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker"
         this["MixinConfigs"] = "mixins.$modid.json"
     }
 }

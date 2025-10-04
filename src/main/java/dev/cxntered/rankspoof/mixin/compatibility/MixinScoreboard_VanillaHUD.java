@@ -1,6 +1,6 @@
 package dev.cxntered.rankspoof.mixin.compatibility;
 
-import dev.cxntered.rankspoof.config.Config;
+import dev.cxntered.rankspoof.RankSpoof;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team;
 import org.spongepowered.asm.mixin.Dynamic;
@@ -24,8 +24,8 @@ public abstract class MixinScoreboard_VanillaHUD {
     private String rankspoof$spoofScoreboardRank(Team team, String string) {
         String formattedString = ScorePlayerTeam.formatPlayerName(team, string);
 
-        if (Config.getInstance().enabled && formattedString.startsWith("Rank: ")) {
-            String rank = Config.getInstance().spoofedRank
+        if (RankSpoof.config.enabled && formattedString.startsWith("Rank: ")) {
+            String rank = RankSpoof.config.spoofedRank
                     .replace('&', '§')
                     .replace("[", "")
                     .replace("]", "");

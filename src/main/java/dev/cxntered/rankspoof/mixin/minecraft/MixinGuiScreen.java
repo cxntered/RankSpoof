@@ -1,9 +1,7 @@
 package dev.cxntered.rankspoof.mixin.minecraft;
 
-import dev.cxntered.rankspoof.config.Config;
-import gg.essential.lib.mixinextras.sugar.Local;
+import dev.cxntered.rankspoof.RankSpoof;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -20,11 +18,11 @@ public abstract class MixinGuiScreen {
                     ordinal = 1
             )
     )
-    private Object rankspoof$spoofTooltipRank(List<String> list, int i, Object object, @Local(argsOnly = true) ItemStack stack) {
-        if (Config.getInstance().enabled && stack.getDisplayName().equals("§aCharacter Information")) {
+    private Object rankspoof$spoofTooltipRank(List<String> list, int i, Object object) {
+        if (RankSpoof.config.enabled) {
             if (!list.get(i).startsWith("§5§o§7Rank: ")) return object;
 
-            String rank = Config.getInstance().spoofedRank
+            String rank = RankSpoof.config.spoofedRank
                     .replace('&', '§')
                     .replace("[", "")
                     .replace("]", "");

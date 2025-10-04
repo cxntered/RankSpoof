@@ -1,9 +1,9 @@
 package dev.cxntered.rankspoof;
 
-import dev.cxntered.rankspoof.command.RankSpoofCommand;
-import dev.cxntered.rankspoof.config.Config;
-import gg.essential.universal.UMinecraft;
-import net.minecraftforge.client.ClientCommandHandler;
+import cc.polyfrost.oneconfig.libs.universal.UMinecraft;
+import cc.polyfrost.oneconfig.utils.commands.CommandManager;
+import dev.cxntered.rankspoof.command.ModCommand;
+import dev.cxntered.rankspoof.config.ModConfig;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 @Mod(modid = "rankspoof", useMetadata = true)
 public class RankSpoof {
+    public static ModConfig config;
+
     private static final Pattern TEAM_REGEX = Pattern.compile("(?:§r)?§[a-z0-9]§l[A-Z](?:§r)? .*"); // matches team prefixes, e.g. "§r§c§lR"
     private static final Pattern LAST_FORMAT_PATTERN = Pattern.compile("[§a-f0-9rblomn]{2}"); // matches last format, e.g. "§b" or "§l"
 
@@ -22,8 +24,8 @@ public class RankSpoof {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        Config.getInstance().preload();
-        ClientCommandHandler.instance.registerCommand(new RankSpoofCommand());
+        config = new ModConfig();
+        CommandManager.INSTANCE.registerCommand(new ModCommand());
     }
 
     public static String getSpoofedText(String text) {
@@ -35,7 +37,7 @@ public class RankSpoof {
             updatePatterns(username);
         }
 
-        String rank = Config.getInstance().spoofedRank.replace('&', '§');
+        String rank = config.spoofedRank.replace('&', '§');
         Matcher rankMatcher = rankPattern.matcher(text);
         Matcher noRankMatcher = noRankPattern.matcher(text);
 
