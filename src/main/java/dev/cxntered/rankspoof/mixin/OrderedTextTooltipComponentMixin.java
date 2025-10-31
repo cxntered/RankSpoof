@@ -23,13 +23,14 @@ public abstract class OrderedTextTooltipComponentMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void spoofTooltipRank(OrderedText text, CallbackInfo ci) {
         if (ModConfig.CONFIG.instance().enabled) {
+            // TODO: remove dependency on LegacyFormatting
             String string = LegacyFormatting.toLegacy(text);
             if (string.startsWith("§7Rank: ")) {
                 String rank = ModConfig.CONFIG.instance().spoofedRank
                         .replace('&', '§')
                         .replace("[", "")
                         .replace("]", "");
-                this.text = Text.literal("§7Rank: §r" + rank).asOrderedText();
+                this.text = Text.literal("§7Rank: §r").append(LegacyFormatting.fromLegacy(rank)).asOrderedText();
             }
         }
     }

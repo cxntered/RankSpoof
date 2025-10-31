@@ -1,35 +1,17 @@
 package dev.cxntered.rankspoof.text;
 
-import net.minecraft.text.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class is used to convert to and from legacy formatting codes (i.e. codes starting with '§').
  */
 public class LegacyFormatting {
-    /**
-     * Converts a StringVisitable object to a legacy formatted string.
-     *
-     * @param stringVisitable The StringVisitable object to convert.
-     * @return A string with legacy formatting.
-     */
-    public static String toLegacy(StringVisitable stringVisitable) {
-        StringBuilder builder = new StringBuilder();
-        AtomicReference<Style> lastFormatting = new AtomicReference<>(Style.EMPTY);
-
-        stringVisitable.visit((style, string) -> {
-            String formatting = getFormattingCodes(style, lastFormatting.get());
-            builder.append(formatting).append(string);
-            lastFormatting.set(style);
-            return Optional.empty();
-        }, Style.EMPTY);
-
-        return builder.toString();
-    }
-
     /**
      * Converts an OrderedText object to a legacy formatted string.
      *
@@ -51,12 +33,12 @@ public class LegacyFormatting {
     }
 
     /**
-     * Converts a legacy formatted string to a StringVisitable object.
+     * Converts a legacy formatted string to a Text object.
      *
      * @param string The legacy formatted string to convert.
-     * @return A StringVisitable object with the equivalent formatting.
+     * @return A Text object with the equivalent formatting.
      */
-    public static StringVisitable fromLegacy(String string) {
+    public static Text fromLegacy(String string) {
         if (string == null || string.isEmpty()) {
             return Text.empty();
         }

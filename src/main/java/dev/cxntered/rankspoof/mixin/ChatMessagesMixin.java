@@ -1,8 +1,8 @@
 package dev.cxntered.rankspoof.mixin;
 
-import dev.cxntered.rankspoof.RankSpoof;
 import dev.cxntered.rankspoof.config.ModConfig;
-import dev.cxntered.rankspoof.text.LegacyFormatting;
+import dev.cxntered.rankspoof.text.RankTextModifier;
+import dev.cxntered.rankspoof.text.TextConverter;
 import net.minecraft.client.util.ChatMessages;
 import net.minecraft.text.StringVisitable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,10 +20,8 @@ public abstract class ChatMessagesMixin {
             index = 0
     )
     private static StringVisitable spoofChatMessageLine(StringVisitable stringVisitable) {
-        if (ModConfig.CONFIG.instance().enabled) {
-            String message = LegacyFormatting.toLegacy(stringVisitable);
-            return LegacyFormatting.fromLegacy(RankSpoof.getSpoofedText(message));
-        }
+        if (ModConfig.CONFIG.instance().enabled)
+            return RankTextModifier.replaceRank(TextConverter.fromStringVisitable(stringVisitable));
         return stringVisitable;
     }
 }
