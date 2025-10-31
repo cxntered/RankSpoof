@@ -4,6 +4,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,7 +57,22 @@ public class LegacyFormatting {
                     currentSegment.setLength(0);
                 }
 
-                Formatting format = Formatting.byCode(string.charAt(++i));
+                char code = string.charAt(++i);
+
+                // custom rgb color format (§#rrggbb)
+                if (code == '#' && i + 6 < string.length()) {
+                    String hexCode = string.substring(i + 1, i + 7);
+                    try {
+                        int color = Integer.parseInt(hexCode, 16);
+                        currentStyle = currentStyle.withColor(TextColor.fromRgb(color));
+                        i += 6;
+                        continue;
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                }
+
+                Formatting format = Formatting.byCode(code);
                 if (format == null) continue;
 
                 if (format == Formatting.RESET) {

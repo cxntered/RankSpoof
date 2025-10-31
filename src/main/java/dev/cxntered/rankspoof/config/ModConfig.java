@@ -63,9 +63,12 @@ public class ModConfig {
     }
 
     private static Text buildColorCodesDescription() {
-        MutableText description = Text.literal("§lAvailable color codes (hover for info):§r\n");
+        MutableText description = Text.literal("§lAvailable color codes (hover for info)§r\n");
         int count = 0;
 
+        description.append(Text.literal("#§cRR§aGG§9BB\n")
+                .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Text.literal("RGB Color (Hex Code)"))))
+        );
         for (Formatting formatting : Formatting.values()) {
             if (formatting.isColor()) {
                 description.append(createFormattingDisplay(formatting));
@@ -77,7 +80,7 @@ public class ModConfig {
     }
 
     private static Text buildFormattingCodesDescription() {
-        MutableText description = Text.literal("§lAvailable formatting codes (hover for info):§r\n");
+        MutableText description = Text.literal("§lAvailable formatting codes (hover for info)§r\n");
 
         for (Formatting formatting : Formatting.values()) {
             if (!formatting.isColor()) {
