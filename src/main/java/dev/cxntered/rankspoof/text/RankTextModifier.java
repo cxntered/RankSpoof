@@ -40,23 +40,23 @@ public class RankTextModifier {
             if (RANK_START_PATTERN.matcher(string).find()) {
                 // rank is contained within a single sibling, e.g. "[VIP]" or "[MVP]"
                 if (sibling.getString().endsWith("] ") && i + 1 < siblings.size() && siblings.get(i + 1).getString().equals(username)) {
-                    mutableText.append(LegacyFormatting.fromLegacy(rank + " " + username));
+                    mutableText.append(TextConverter.fromLegacyFormatting(rank + " " + username));
                     i++; // skip username sibling
                     continue;
                 } else if (sibling.getString().endsWith("] " + username)) {
                     // rank and username are in the same sibling
-                    mutableText.append(LegacyFormatting.fromLegacy(rank + " " + username));
+                    mutableText.append(TextConverter.fromLegacyFormatting(rank + " " + username));
                     continue;
                 }
 
                 // rank spans multiple siblings, e.g. "[MVP", "++", "]" or "[", "YOUTUBE", "]"
                 if (i + 3 < siblings.size() && siblings.get(i + 3).getString().equals(username)) {
-                    mutableText.append(LegacyFormatting.fromLegacy(rank + " " + username));
+                    mutableText.append(TextConverter.fromLegacyFormatting(rank + " " + username));
                     i += 3; // skip rank parts and username
                     continue;
                 } else if (i + 2 < siblings.size() && siblings.get(i + 2).getString().endsWith("] " + username)) {
                     // username is in the same sibling as last rank part
-                    mutableText.append(LegacyFormatting.fromLegacy(rank + " " + username));
+                    mutableText.append(TextConverter.fromLegacyFormatting(rank + " " + username));
                     i += 2; // skip rank parts and username
                     continue;
                 }
@@ -64,7 +64,7 @@ public class RankTextModifier {
                 // player has no rank
                 String[] parts = string.split(username, 2);
                 mutableText.append(Text.literal(parts[0]).setStyle(sibling.getStyle()));
-                mutableText.append(LegacyFormatting.fromLegacy(rank + " " + username));
+                mutableText.append(TextConverter.fromLegacyFormatting(rank + " " + username));
                 mutableText.append(Text.literal(parts[1]).setStyle(sibling.getStyle()));
                 continue;
             } else if (string.contains(username)) {
@@ -81,7 +81,7 @@ public class RankTextModifier {
                 }
 
                 // rank prefix is omitted, append username with spoofed rank style only
-                Text rankText = LegacyFormatting.fromLegacy(rank);
+                Text rankText = TextConverter.fromLegacyFormatting(rank);
                 String[] parts = string.split(username, 2);
                 mutableText.append(Text.literal(parts[0]).setStyle(sibling.getStyle()));
                 mutableText.append(Text.literal(username).setStyle(rankText.getSiblings().getLast().getStyle()));

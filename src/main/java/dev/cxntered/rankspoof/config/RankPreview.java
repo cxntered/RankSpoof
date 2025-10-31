@@ -1,6 +1,6 @@
 package dev.cxntered.rankspoof.config;
 
-import dev.cxntered.rankspoof.text.LegacyFormatting;
+import dev.cxntered.rankspoof.text.TextConverter;
 import dev.isxander.yacl3.gui.image.ImageRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -20,7 +20,7 @@ public class RankPreview implements ImageRenderer {
         isRendering = true;
 
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        Text rankPreview = LegacyFormatting.fromLegacy(rank.replace('&', '§') + " " + MinecraftClient.getInstance().getSession().getUsername());
+        Text rankPreview = TextConverter.fromLegacyFormatting(rank.replace('&', '§') + " " + MinecraftClient.getInstance().getSession().getUsername());
 
         List<OrderedText> lines = textRenderer.wrapLines(rankPreview, width - 10);
         int textHeight = lines.size() * textRenderer.fontHeight;

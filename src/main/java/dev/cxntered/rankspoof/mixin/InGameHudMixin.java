@@ -1,7 +1,7 @@
 package dev.cxntered.rankspoof.mixin;
 
 import dev.cxntered.rankspoof.config.ModConfig;
-import dev.cxntered.rankspoof.text.LegacyFormatting;
+import dev.cxntered.rankspoof.text.TextConverter;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ public abstract class InGameHudMixin {
                     .replace('&', '§')
                     .replace("[", "")
                     .replace("]", "");
-            return Text.literal("Rank: ").append(LegacyFormatting.fromLegacy(rank));
+            return Text.literal("Rank: ").append(TextConverter.fromLegacyFormatting(rank));
         }
         return text;
     }
