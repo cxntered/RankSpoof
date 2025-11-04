@@ -27,7 +27,7 @@ public class ModConfig {
     @SerialEntry
     public boolean enabled = true;
     @SerialEntry
-    public String spoofedRank = "&c[OWNER]";
+    public String spoofedRank = "&c[&6ዞ&c]";
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
