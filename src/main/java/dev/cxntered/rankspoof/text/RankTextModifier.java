@@ -50,7 +50,7 @@ public class RankTextModifier {
                     replaceUsername(result, string, username, sibling.getStyle(), TextConverter.fromLegacyFormatting(rank + " " + username));
                     continue;
                 } else if (isPlayerInTeam(siblings, i)) {
-                    // player is in a team, skip whole text
+                    // player is in a team, skip processing text
                     return text;
                 } else {
                     // rank prefix is omitted; append username with spoofed rank style only
@@ -59,6 +59,7 @@ public class RankTextModifier {
                     continue;
                 }
             }
+
             result.append(sibling);
         }
 

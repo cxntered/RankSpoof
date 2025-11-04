@@ -21,7 +21,6 @@ public abstract class TextRendererMixin {
     private OrderedText spoofPrepare(OrderedText orderedText) {
         if (ModConfig.CONFIG.instance().enabled && !RankPreview.isRendering)
             return RankTextModifier.replaceRank(TextConverter.fromOrderedText(orderedText)).asOrderedText();
-
         return orderedText;
     }
 

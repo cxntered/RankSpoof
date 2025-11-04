@@ -9,25 +9,25 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TextConverter {
     public static Text fromOrderedText(OrderedText orderedText) {
         MutableText text = Text.empty();
-        StringBuilder currentSection = new StringBuilder();
+        StringBuilder buffer = new StringBuilder();
         AtomicReference<Style> currentStyle = new AtomicReference<>();
 
         orderedText.accept((index, style, codePoint) -> {
             if (currentStyle.get() == null) {
                 currentStyle.set(style);
             } else if (currentStyle.get() != style) {
-                if (!currentSection.isEmpty()) {
-                    text.append(Text.literal(currentSection.toString()).setStyle(currentStyle.get()));
-                    currentSection.setLength(0);
+                if (!buffer.isEmpty()) {
+                    text.append(Text.literal(buffer.toString()).setStyle(currentStyle.get()));
+                    buffer.setLength(0);
                 }
                 currentStyle.set(style);
             }
-            currentSection.appendCodePoint(codePoint);
+            buffer.appendCodePoint(codePoint);
             return true;
         });
 
-        if (!currentSection.isEmpty()) {
-            text.append(Text.literal(currentSection.toString()).setStyle(currentStyle.get()));
+        if (!buffer.isEmpty()) {
+            text.append(Text.literal(buffer.toString()).setStyle(currentStyle.get()));
         }
 
         return text;
@@ -37,25 +37,25 @@ public class TextConverter {
         if (stringVisitable instanceof Text) return (Text) stringVisitable;
 
         MutableText text = Text.empty();
-        StringBuilder currentSection = new StringBuilder();
+        StringBuilder buffer = new StringBuilder();
         AtomicReference<Style> currentStyle = new AtomicReference<>();
 
         stringVisitable.visit((style, string) -> {
             if (currentStyle.get() == null) {
                 currentStyle.set(style);
             } else if (currentStyle.get() != style) {
-                if (!currentSection.isEmpty()) {
-                    text.append(Text.literal(currentSection.toString()).setStyle(currentStyle.get()));
-                    currentSection.setLength(0);
+                if (!buffer.isEmpty()) {
+                    text.append(Text.literal(buffer.toString()).setStyle(currentStyle.get()));
+                    buffer.setLength(0);
                 }
                 currentStyle.set(style);
             }
-            currentSection.append(string);
+            buffer.append(string);
             return Optional.empty();
         }, Style.EMPTY);
 
-        if (!currentSection.isEmpty()) {
-            text.append(Text.literal(currentSection.toString()).setStyle(currentStyle.get()));
+        if (!buffer.isEmpty()) {
+            text.append(Text.literal(buffer.toString()).setStyle(currentStyle.get()));
         }
 
         return text;
@@ -97,12 +97,11 @@ public class TextConverter {
                 Formatting format = Formatting.byCode(code);
                 if (format == null) continue;
 
-                if (format == Formatting.RESET) {
-                    currentStyle = Style.EMPTY;
-                } else if (format.isColor()) {
+                if (format.isColor()) {
                     currentStyle = currentStyle.withColor(format);
                 } else {
                     currentStyle = switch (format) {
+                        case RESET -> Style.EMPTY;
                         case BOLD -> currentStyle.withBold(true);
                         case ITALIC -> currentStyle.withItalic(true);
                         case UNDERLINE -> currentStyle.withUnderline(true);
