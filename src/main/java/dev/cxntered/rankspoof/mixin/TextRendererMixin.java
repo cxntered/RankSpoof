@@ -14,7 +14,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(TextRenderer.class)
 public abstract class TextRendererMixin {
     @ModifyVariable(
-            method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
+            //? if <=1.21.5 {
+            /*method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
+            /*///?} elif <=1.21.10 {
+            /*method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
+            *///?} else
+            method = "prepare(Lnet/minecraft/text/OrderedText;FFIZZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
             at = @At(value = "HEAD"),
             argsOnly = true
     )

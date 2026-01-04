@@ -95,20 +95,10 @@ public class TextConverter {
                 }
 
                 Formatting format = Formatting.byCode(code);
-                if (format == null) continue;
-
-                if (format.isColor()) {
-                    currentStyle = currentStyle.withColor(format);
-                } else {
-                    currentStyle = switch (format) {
-                        case RESET -> Style.EMPTY;
-                        case BOLD -> currentStyle.withBold(true);
-                        case ITALIC -> currentStyle.withItalic(true);
-                        case UNDERLINE -> currentStyle.withUnderline(true);
-                        case STRIKETHROUGH -> currentStyle.withStrikethrough(true);
-                        case OBFUSCATED -> currentStyle.withObfuscated(true);
-                        default -> currentStyle;
-                    };
+                if (format != null) {
+                    currentStyle = format == Formatting.RESET
+                            ? Style.EMPTY
+                            : currentStyle.withFormatting(format);
                 }
             } else {
                 currentSegment.append(currentChar);

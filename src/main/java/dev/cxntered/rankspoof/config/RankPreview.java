@@ -26,7 +26,15 @@ public class RankPreview implements ImageRenderer {
         int textHeight = lines.size() * textRenderer.fontHeight;
         int totalHeight = textHeight + 10;
 
-        TooltipBackgroundRenderer.render(drawContext, x + 5, y + 5, width - 10, totalHeight - 10, null);
+        TooltipBackgroundRenderer.render(
+                drawContext,
+                x + 5,
+                y + 5,
+                width - 10,
+                totalHeight - 10,
+                /*? if <=1.21.5 {*//* 0, *//*?}*/
+                null
+        );
 
         int textY = y + 6;
         for (OrderedText line : lines) {
