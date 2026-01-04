@@ -18,8 +18,14 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build
         run: ./gradlew build
+      - name: Stage JARs for upload
+        run: |
+          mkdir -p staging
+          find versions -path "*/build/libs/*.jar" -exec cp {} staging/ \;
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Artifacts
-          path: versions/**/build/libs/*.jar
+          path: |
+            staging/*.jar
+            !staging/*-sources.jar

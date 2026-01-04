@@ -2,8 +2,13 @@ plugins {
     id("net.fabricmc.fabric-loom-remap")
 }
 
-version = "${property("mod.version")}+${sc.current.version}"
-base.archivesName = property("mod.id") as String
+val mcMin = property("mod.mc_min") as String
+val mcMax = property("mod.mc_max") as String
+val mcVersionRange = if (mcMin == mcMax) mcMin else "$mcMin-$mcMax"
+val mcDep = if (mcMin == mcMax) mcMin else ">=$mcMin <=$mcMax"
+
+version = "${property("mod.version")}+$mcVersionRange"
+base.archivesName = property("mod.name") as String
 
 val requiredJava = when {
     sc.current.parsed >= "1.20.6" -> JavaVersion.VERSION_21
@@ -63,7 +68,7 @@ tasks {
         inputs.property("version", project.property("mod.version"))
 
         inputs.property("fabric_loader", project.property("deps.fabric_loader"))
-        inputs.property("minecraft", project.property("mod.mc_dep"))
+        inputs.property("minecraft", mcDep)
         inputs.property("yacl", project.property("deps.yacl"))
 
         val props = mapOf(
@@ -71,7 +76,7 @@ tasks {
             "name" to project.property("mod.name"),
             "version" to project.property("mod.version"),
             "fabric_loader" to project.property("deps.fabric_loader"),
-            "minecraft" to project.property("mod.mc_dep"),
+            "minecraft" to mcDep,
             "yacl" to project.property("deps.yacl")
         )
 

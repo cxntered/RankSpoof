@@ -13,7 +13,7 @@ public abstract class GuiMixin {
     @ModifyVariable(
             method = "method_55439", // displayScoreboardSidebar$method_55439 (lambda)
             at = @At(value = "STORE"),
-            index = 6
+            index = 6 // playerScoreEntry.formatValue(numberFormat)
     )
     private Component spoofScoreboardRank(Component component) {
         if (ModConfig.CONFIG.instance().enabled && component.getString().startsWith("Rank: ")) {
