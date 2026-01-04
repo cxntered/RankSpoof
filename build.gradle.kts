@@ -27,14 +27,6 @@ repositories {
 }
 
 dependencies {
-    /**
-     * Fetches only the required Fabric API modules to not waste time downloading all of them for each version.
-     * @see <a href="https://github.com/FabricMC/fabric">List of Fabric API modules</a>
-     */
-    fun fapi(vararg modules: String) {
-        for (it in modules) modImplementation(fabricApi.module(it, property("deps.fabric_api") as String))
-    }
-
     minecraft("com.mojang:minecraft:${sc.current.version}")
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
@@ -42,8 +34,6 @@ dependencies {
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${property("deps.devauth")}")
     modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}+${sc.current.version}-fabric")
     modImplementation("com.terraformersmc:modmenu:${property("deps.mod_menu")}")
-
-    fapi("fabric-resource-loader-v0")
 }
 
 loom {
