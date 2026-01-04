@@ -36,7 +36,7 @@ dependencies {
     }
 
     minecraft("com.mojang:minecraft:${sc.current.version}")
-    mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
+    mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${property("deps.devauth")}")

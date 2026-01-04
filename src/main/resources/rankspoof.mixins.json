@@ -3,10 +3,10 @@
 	"package": "dev.cxntered.rankspoof.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"TextRendererMixin",
-		"ChatMessagesMixin",
-		"InGameHudMixin",
-		"OrderedTextTooltipComponentMixin"
+		"FontMixin",
+		"ComponentRenderUtilsMixin",
+		"GuiMixin",
+		"ClientTextTooltipMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

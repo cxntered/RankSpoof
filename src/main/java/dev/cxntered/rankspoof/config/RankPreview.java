@@ -1,13 +1,13 @@
 package dev.cxntered.rankspoof.config;
 
-import dev.cxntered.rankspoof.text.TextConverter;
+import dev.cxntered.rankspoof.component.ComponentConverter;
 import dev.isxander.yacl3.gui.image.ImageRenderer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.List;
 
@@ -16,18 +16,18 @@ public class RankPreview implements ImageRenderer {
     public static boolean isRendering = false;
 
     @Override
-    public int render(DrawContext drawContext, int x, int y, int width, float v) {
+    public int render(GuiGraphics guiGraphics, int x, int y, int width, float v) {
         isRendering = true;
 
-        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        Text rankPreview = TextConverter.fromLegacyFormatting(rank.replace('&', '§') + " " + MinecraftClient.getInstance().getSession().getUsername());
+        Font font = Minecraft.getInstance().font;
+        Component rankPreview = ComponentConverter.fromLegacyFormatting(rank.replace('&', '§') + " " + Minecraft.getInstance().getUser().getName());
 
-        List<OrderedText> lines = textRenderer.wrapLines(rankPreview, width - 10);
-        int textHeight = lines.size() * textRenderer.fontHeight;
+        List<FormattedCharSequence> lines = font.split(rankPreview, width - 10);
+        int textHeight = lines.size() * font.lineHeight;
         int totalHeight = textHeight + 10;
 
-        TooltipBackgroundRenderer.render(
-                drawContext,
+        TooltipRenderUtil.renderTooltipBackground(
+                guiGraphics,
                 x + 5,
                 y + 5,
                 width - 10,
@@ -37,15 +37,14 @@ public class RankPreview implements ImageRenderer {
         );
 
         int textY = y + 6;
-        for (OrderedText line : lines) {
-            int lineWidth = textRenderer.getWidth(line);
+        for (FormattedCharSequence line : lines) {
+            int lineWidth = font.width(line);
             int centeredX = x + 5 + ((width - 10) - lineWidth) / 2;
-            drawContext.drawTextWithShadow(textRenderer, line, centeredX, textY, -1);
-            textY += textRenderer.fontHeight;
+            guiGraphics.drawString(font, line, centeredX, textY, -1);
+            textY += font.lineHeight;
         }
 
         isRendering = false;
-
         return totalHeight;
     }
 

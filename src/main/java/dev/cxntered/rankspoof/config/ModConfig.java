@@ -10,12 +10,12 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import dev.isxander.yacl3.platform.YACLPlatform;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 
 public class ModConfig {
     public static final ConfigClassHandler<ModConfig> CONFIG = ConfigClassHandler.createBuilder(ModConfig.class)
@@ -31,23 +31,23 @@ public class ModConfig {
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
-                .title(Text.literal("RankSpoof"))
+                .title(Component.literal("RankSpoof"))
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.literal("Settings"))
+                        .name(Component.literal("Settings"))
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Enabled"))
-                                .description(OptionDescription.of(Text.literal("Enable or disable the mod")))
+                                .name(Component.literal("Enabled"))
+                                .description(OptionDescription.of(Component.literal("Enable or disable the mod")))
                                 .binding(defaults.enabled, () -> config.enabled, newVal -> config.enabled = newVal)
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
                         .option(Option.<String>createBuilder()
-                                .name(Text.literal("Spoofed Rank"))
+                                .name(Component.literal("Spoofed Rank"))
                                 .description(
                                         OptionDescription.createBuilder()
-                                                .text(Text.literal("The rank to spoof. Use '&' for color/formatting codes.")
-                                                        .append(Text.literal("\n\n"))
+                                                .text(Component.literal("The rank to spoof. Use '&' for color/formatting codes.")
+                                                        .append(Component.literal("\n\n"))
                                                         .append(buildColorCodesDescription())
-                                                        .append(Text.literal("\n"))
+                                                        .append(Component.literal("\n"))
                                                         .append(buildFormattingCodesDescription()))
                                                 .customImage(new RankPreview())
                                                 .build()
@@ -62,47 +62,47 @@ public class ModConfig {
         )).generateScreen(parent);
     }
 
-    private static Text buildColorCodesDescription() {
-        MutableText description = Text.literal("§lAvailable color codes (hover for info)§r\n");
+    private static Component buildColorCodesDescription() {
+        MutableComponent description = Component.literal("§lAvailable color codes (hover for info)§r\n");
         int count = 0;
 
-        description.append(Text.literal("#§cRR§aGG§9BB\n")
-                .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Text.literal("RGB Color (Hex Code)"))))
+        description.append(Component.literal("#§cRR§aGG§9BB\n")
+                .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal("RGB Color (Hex Code)"))))
         );
-        for (Formatting formatting : Formatting.values()) {
+        for (ChatFormatting formatting : ChatFormatting.values()) {
             if (formatting.isColor()) {
                 description.append(createFormattingDisplay(formatting));
-                if (++count % 4 == 0) description.append(Text.literal("\n"));
+                if (++count % 4 == 0) description.append(Component.literal("\n"));
             }
         }
 
         return description;
     }
 
-    private static Text buildFormattingCodesDescription() {
-        MutableText description = Text.literal("§lAvailable formatting codes (hover for info)§r\n");
+    private static Component buildFormattingCodesDescription() {
+        MutableComponent description = Component.literal("§lAvailable formatting codes (hover for info)§r\n");
 
-        for (Formatting formatting : Formatting.values()) {
+        for (ChatFormatting formatting : ChatFormatting.values()) {
             if (!formatting.isColor()) {
                 description.append(createFormattingDisplay(formatting));
-                description.append(Text.literal("\n"));
+                description.append(Component.literal("\n"));
             }
         }
 
         return description;
     }
 
-    private static Text createFormattingDisplay(Formatting formatting) {
+    private static Component createFormattingDisplay(ChatFormatting formatting) {
         String name = toTitleCase(formatting.getName());
 
         if (formatting.isColor()) {
-            return Text.literal(formatting.toString() + formatting.getCode() + " ")
+            return Component.literal(formatting.toString() + formatting.getChar() + " ")
                     .setStyle(Style.EMPTY.withHoverEvent(
-                            new HoverEvent.ShowText(Text.literal(name))));
+                            new HoverEvent.ShowText(Component.literal(name))));
         } else {
-            return Text.literal(formatting.getCode() + ": " + formatting + name + "§r")
+            return Component.literal(formatting.getChar() + ": " + formatting + name + "§r")
                     .setStyle(Style.EMPTY.withHoverEvent(
-                            new HoverEvent.ShowText(Text.literal(name))));
+                            new HoverEvent.ShowText(Component.literal(name))));
         }
     }
 
