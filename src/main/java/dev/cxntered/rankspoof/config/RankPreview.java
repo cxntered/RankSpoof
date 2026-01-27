@@ -32,7 +32,7 @@ public class RankPreview implements ImageRenderer {
                 y + 5,
                 width - 10,
                 totalHeight - 10,
-                /*? if <=1.21.5 {*/ /*0, *//*?}*/
+                /*? if 1.21.4 {*/ /*0, *//*?}*/
                 null
         );
 
