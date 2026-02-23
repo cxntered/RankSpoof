@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class RankComponentModifier {
-    private static final Pattern RANK_START_PATTERN = Pattern.compile("\\[[A-Za-z]+"); // matches rank start, e.g. "[MVP" (for "[MVP", "++", "]") or "[VIP]"
+    // matches rank start, e.g. "[MVP" (for "[MVP", "++", "]") or "[VIP]"
+    private static final Pattern RANK_START_PATTERN = Pattern.compile("\\[[A-Za-z]+");
 
     /**
      * Replaces the rank in a Component with a spoofed rank.
@@ -33,29 +34,31 @@ public class RankComponentModifier {
 
         for (int i = 0; i < siblings.size(); i++) {
             Component sibling = siblings.get(i);
+            Style style = sibling.getStyle();
             String string = sibling.getString();
 
+            // player has a rank & text includes rank prefix
             if (RANK_START_PATTERN.matcher(string).find()) {
-                // player has a rank
-                int processed = findRankEndOffset(siblings, i, username);
-                if (processed >= 0) {
-                    result.append(spoofedRankWithName);
-                    i += processed;
+                int rankEndOffset = findRankEndOffset(siblings, i, username);
+                if (rankEndOffset >= 0) {
+                    result.append(applyInheritedStyle(spoofedRankWithName, style));
+                    i += rankEndOffset;
                     continue;
                 }
-            } else if (string.contains(username)) {
+            }
+
+            // player doesn't have a rank or rank prefix is missing
+            if (string.contains(username)) {
+                if (isPlayerInTeam(siblings, i)) return component;
+
                 if (isUnrankedPlayer(sibling, component)) {
-                    // player has no rank
-                    replaceUsername(result, string, username, sibling.getStyle(), spoofedRankWithName);
-                    continue;
-                } else if (isPlayerInTeam(siblings, i)) {
-                    return component; // player is in a team, skip processing
+                    replaceUsername(result, string, username, style, applyInheritedStyle(spoofedRankWithName, style));
                 } else {
                     // rank prefix is omitted; append username with spoofed rank style only
                     Style rankStyle = spoofedRankWithName.getSiblings().getLast().getStyle();
-                    replaceUsername(result, string, username, sibling.getStyle(), Component.literal(username).setStyle(rankStyle));
-                    continue;
+                    replaceUsername(result, string, username, style, Component.literal(username).setStyle(mergeStyle(rankStyle, style)));
                 }
+                continue;
             }
 
             result.append(sibling);
@@ -66,24 +69,21 @@ public class RankComponentModifier {
 
     /**
      * Finds how many siblings after index <code>i</code> are part of a rank and should be skipped when replacing.
+     * Slides a window of up to 4 siblings ahead (to be safe), looking for where the rank ends and the username appears.
      * @return The number of siblings to skip or -1 if no valid rank pattern found.
      */
     private static int findRankEndOffset(List<Component> siblings, int i, String username) {
-        Component sibling = siblings.get(i);
+        for (int offset = 0; offset < 4 && i + offset < siblings.size(); offset++) {
+            String text = siblings.get(i + offset).getString();
 
-        // rank is contained within a single sibling, e.g. "[VIP]" or "[MVP]"
-        if (sibling.getString().endsWith("] ") && i + 1 < siblings.size() && siblings.get(i + 1).getString().equals(username)) {
-            return 1; // skip username sibling
-        } else if (sibling.getString().endsWith("] " + username)) {
-            return 0; // rank and username are in the same sibling
-        }
+            // don't slide past a sibling that starts a prefix (e.g. "[RED] " then "[VIP] ")
+            if (offset > 0 && text.contains("[")) break;
 
-        // rank spans multiple siblings, e.g. "[MVP", "++", "]" or "[", "YOUTUBE", "]"
-        if (i + 3 < siblings.size() && siblings.get(i + 3).getString().equals(username)) {
-            return 3; // skip rank parts and username
-        } else if (i + 2 < siblings.size() && siblings.get(i + 2).getString().endsWith("] " + username)) {
-            // username is in the same sibling as last rank part
-            return 2; // skip rank parts and username
+            if (text.endsWith("] " + username)) {
+                return offset; // username is in the same sibling as last rank part
+            } else if (text.endsWith("] ") && i + offset + 1 < siblings.size() && siblings.get(i + offset + 1).getString().equals(username)) {
+                return offset + 1; // username is in sibling after last rank part
+            }
         }
 
         return -1; // no rank found
@@ -129,5 +129,34 @@ public class RankComponentModifier {
 
         char firstChar = content.charAt(0);
         return firstChar >= 'A' && firstChar <= 'Z';
+    }
+
+    /**
+     * Applies non-formatting style properties (interactivity and font) from
+     * {@code inherited} to each sibling of the given component.
+     */
+    private static Component applyInheritedStyle(Component component, Style inherited) {
+        if (inherited.getClickEvent() == null && inherited.getHoverEvent() == null
+                && inherited.getInsertion() == null && inherited.getFont().equals(FontDescription.DEFAULT)) {
+            return component;
+        }
+        MutableComponent result = MutableComponent.create(component.getContents()).setStyle(mergeStyle(component.getStyle(), inherited));
+        for (Component sibling : component.getSiblings()) {
+            result.append(((MutableComponent) sibling).setStyle(mergeStyle(sibling.getStyle(), inherited)));
+        }
+        return result;
+    }
+
+    private static Style mergeStyle(Style target, Style inherited) {
+        Style merged = target;
+        if (inherited.getClickEvent() != null && merged.getClickEvent() == null)
+            merged = merged.withClickEvent(inherited.getClickEvent());
+        if (inherited.getHoverEvent() != null && merged.getHoverEvent() == null)
+            merged = merged.withHoverEvent(inherited.getHoverEvent());
+        if (inherited.getInsertion() != null && merged.getInsertion() == null)
+            merged = merged.withInsertion(inherited.getInsertion());
+        if (!inherited.getFont().equals(FontDescription.DEFAULT) && merged.getFont().equals(FontDescription.DEFAULT))
+            merged = merged.withFont(inherited.getFont());
+        return merged;
     }
 }

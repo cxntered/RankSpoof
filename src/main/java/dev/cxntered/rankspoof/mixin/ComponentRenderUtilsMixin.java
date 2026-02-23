@@ -4,6 +4,7 @@ import dev.cxntered.rankspoof.config.ModConfig;
 import dev.cxntered.rankspoof.component.RankComponentModifier;
 import dev.cxntered.rankspoof.component.ComponentConverter;
 import net.minecraft.client.gui.components.ComponentRenderUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,8 +21,10 @@ public abstract class ComponentRenderUtilsMixin {
             index = 0
     )
     private static FormattedText spoofWrapComponents(FormattedText formattedText) {
-        if (ModConfig.CONFIG.instance().enabled)
-            return RankComponentModifier.replaceRank(ComponentConverter.fromFormattedText(formattedText));
+        if (ModConfig.CONFIG.instance().enabled) {
+            Component component = ComponentConverter.expandLegacyFormatting(ComponentConverter.fromFormattedText(formattedText));
+            return RankComponentModifier.replaceRank(component);
+        }
         return formattedText;
     }
 }

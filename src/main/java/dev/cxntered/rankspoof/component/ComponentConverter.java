@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 import net.minecraft.util.FormattedCharSequence;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -63,13 +64,17 @@ public class ComponentConverter {
     }
 
     public static Component fromLegacyFormatting(String string) {
+        return fromLegacyFormatting(string, Style.EMPTY);
+    }
+
+    public static Component fromLegacyFormatting(String string, Style baseStyle) {
         if (string == null || string.isEmpty()) {
             return Component.empty();
         }
 
         MutableComponent text = Component.empty();
         StringBuilder currentSegment = new StringBuilder();
-        Style currentStyle = Style.EMPTY;
+        Style currentStyle = baseStyle;
 
         for (int i = 0; i < string.length(); i++) {
             char currentChar = string.charAt(i);
@@ -98,7 +103,7 @@ public class ComponentConverter {
                 ChatFormatting format = ChatFormatting.getByCode(code);
                 if (format != null) {
                     currentStyle = format == ChatFormatting.RESET
-                            ? Style.EMPTY
+                            ? baseStyle
                             : currentStyle.applyLegacyFormat(format);
                 }
             } else {
@@ -111,5 +116,29 @@ public class ComponentConverter {
         }
 
         return text;
+    }
+
+    /**
+     * Expands legacy formatting codes within siblings' contents into Style objects.
+     */
+    public static Component expandLegacyFormatting(Component component) {
+        List<Component> siblings = component.getSiblings();
+        MutableComponent expanded = component.plainCopy().setStyle(component.getStyle());
+
+        for (Component sibling : siblings) {
+            String text = sibling.getString();
+
+            if (text.contains("§")) {
+                Style baseStyle = sibling.getStyle();
+                Component parsed = fromLegacyFormatting(text, baseStyle);
+                for (Component parsedSibling : parsed.getSiblings()) {
+                    expanded.append(parsedSibling);
+                }
+            } else {
+                expanded.append(sibling);
+            }
+        }
+
+        return expanded;
     }
 }
