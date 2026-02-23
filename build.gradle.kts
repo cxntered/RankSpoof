@@ -1,6 +1,9 @@
 plugins {
     id("net.fabricmc.fabric-loom-remap")
+    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
+
+val modVersion = project.property("mod.version").toString()
 
 val mcMin = property("mod.mc_min").toString()
 val mcMax = property("mod.mc_max").toString()
@@ -71,7 +74,7 @@ tasks {
         val props = mapOf(
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
-            "version" to project.property("mod.version"),
+            "version" to modVersion,
             "fabric_loader" to project.property("deps.fabric_loader"),
             "minecraft" to mcDep,
             "yacl" to project.property("deps.yacl")
@@ -87,5 +90,35 @@ tasks {
         from(remapJar.map { it.archiveFile }, remapSourcesJar.map { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs"))
         dependsOn("build")
+    }
+}
+
+// make sure `modrinth.token` and `github.token` is set in your user gradle properties
+publishMods {
+    file = project.tasks.remapJar.get().archiveFile
+    displayName = modVersion
+    version = "v$modVersion"
+    type = STABLE
+    changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+    modLoaders.add("fabric")
+
+    modrinth {
+        accessToken = findProperty("modrinth.token").toString()
+        projectId = property("publish.modrinth").toString()
+
+        if (mcMax.isEmpty()) {
+            minecraftVersions.add(mcMin)
+        } else {
+            minecraftVersionRange { start = mcMin; end = mcMax }
+        }
+
+        requires("yacl")
+        optional("modmenu")
+    }
+
+    // github release is created in `stonecutter.gradle.kts`
+    github {
+        accessToken = findProperty("github.token").toString()
+        parent(rootProject.tasks.named("publishGithub"))
     }
 }
