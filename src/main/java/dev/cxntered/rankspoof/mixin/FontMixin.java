@@ -16,11 +16,8 @@ public abstract class FontMixin {
     @ModifyVariable(
             //? if >=1.21.11 {
             method = "prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZZI)Lnet/minecraft/client/gui/Font$PreparedText;",
-            //?} elif >=1.21.6 {
-            /*method = "prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZI)Lnet/minecraft/client/gui/Font$PreparedText;",
-            *///?} else {
-            /*method = "renderText(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;IIZ)F",
-            *///?}
+            //?} else
+            /*method = "prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZI)Lnet/minecraft/client/gui/Font$PreparedText;",*/
             at = @At(value = "HEAD"),
             argsOnly = true
     )

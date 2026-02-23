@@ -66,13 +66,9 @@ public class ModConfig {
         MutableComponent description = Component.literal("§lAvailable color codes (hover for info)§r\n");
         int count = 0;
 
-        description.append(Component.literal("#§cRR§aGG§9BB\n")
-                .setStyle(Style.EMPTY.withHoverEvent(
-                        //? if 1.21.4 {
-                        /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("RGB Color (Hex Code)"))
-                        *///?} else
-                        new HoverEvent.ShowText(Component.literal("RGB Color (Hex Code)"))
-                ))
+        description.append(
+                Component.literal("#§cRR§aGG§9BB\n")
+                        .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal("RGB Color (Hex Code)"))))
         );
         for (ChatFormatting formatting : ChatFormatting.values()) {
             if (formatting.isColor()) {
@@ -102,20 +98,10 @@ public class ModConfig {
 
         if (formatting.isColor()) {
             return Component.literal(formatting.toString() + formatting.getChar() + " ")
-                    .setStyle(Style.EMPTY.withHoverEvent(
-                            //? if 1.21.4 {
-                            /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(name))
-                            *///?} else
-                            new HoverEvent.ShowText(Component.literal(name))
-                    ));
+                    .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(name))));
         } else {
             return Component.literal(formatting.getChar() + ": " + formatting + name + "§r")
-                    .setStyle(Style.EMPTY.withHoverEvent(
-                            //? if 1.21.4 {
-                            /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(name))
-                            *///?} else
-                            new HoverEvent.ShowText(Component.literal(name))
-                    ));
+                    .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(name))));
         }
     }
 
