@@ -3,7 +3,7 @@ import me.modmuss50.mpp.ReleaseType
 plugins {
     id("dev.kikugie.stonecutter")
     id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT" apply false
-    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+    id("me.modmuss50.mod-publish-plugin") version "2.1.1"
 }
 
 stonecutter active "1.21.11"

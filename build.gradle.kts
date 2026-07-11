@@ -1,6 +1,5 @@
 plugins {
-    id("net.fabricmc.fabric-loom-remap")
-    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+    id("me.modmuss50.mod-publish-plugin")
 }
 
 val modVersion = project.property("mod.version").toString()
@@ -21,7 +20,7 @@ repositories {
     }
 
     strictMaven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1", "DevAuth", "me.djtheredstoner")
-    maven("https://maven.isxander.dev/releases") { name = "Xander" }
+    strictMaven("https://maven.isxander.dev/releases", "Xander", "dev.isxander", "org.quiltmc.parsers")
     strictMaven("https://maven.terraformersmc.com/releases", "TerraformersMC", "com.terraformersmc")
 }
 
@@ -36,12 +35,6 @@ dependencies {
 }
 
 loom {
-    fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
-
-    decompilerOptions.named("vineflower") {
-        options.put("mark-corresponding-synthetics", "1") // adds names to lambdas - useful for mixins
-    }
-
     afterEvaluate {
         val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
             componentFilter {
@@ -49,18 +42,22 @@ loom {
             }
         }.files.first()
 
-        runConfigs.all {
-            ideConfigGenerated(true)
+        runConfigs.named("client") {
+            generateRunConfig = true
+            runDirectory = rootProject.file("run")
 
-            vmArg("-XX:+AllowEnhancedClassRedefinition")
-            vmArg("-javaagent:$mixinJarFile")
-            property("mixin.debug.export", "true")
-
-            runDir = "../../run"
+            jvmArguments.add("-XX:+AllowEnhancedClassRedefinition")
+            jvmArguments.add("-javaagent:$mixinJarFile")
+            systemProperties.put("devauth.enabled", "true")
+            systemProperties.put("mixin.debug.export", "true")
         }
-
-        runConfigs.remove(runConfigs["server"])
     }
+
+    decompilerOptions.named("vineflower") {
+        options.put("mark-corresponding-synthetics", "1") // adds names to lambdas
+    }
+
+    fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
 }
 
 java {
@@ -86,14 +83,15 @@ tasks {
     }
 
     register<Copy>("buildAndCollect") {
+        description = "Builds mod jars and copies results to `build/libs/`"
         group = "build"
+
         from(remapJar.map { it.archiveFile }, remapSourcesJar.map { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs"))
-        dependsOn("build")
     }
 }
 
-// make sure `modrinth.token` and `github.token` is set in your user gradle properties
+// make sure `modrinth.token` and `github.token` are set in your user gradle properties
 publishMods {
     file = project.tasks.remapJar.get().archiveFile
     displayName = modVersion
