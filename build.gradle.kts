@@ -103,6 +103,9 @@ tasks {
 }
 
 // make sure `modrinth.token` and `github.token` are set in your user gradle properties
+val modrinthToken: String? = findProperty("modrinth.token")?.toString()
+val githubToken: String? = findProperty("github.token")?.toString()
+
 publishMods {
     file = loomx.modJar.get().archiveFile
     displayName = "$modName $modVersion for ${sc.current.version}"
@@ -113,11 +116,12 @@ publishMods {
         "alpha" in modVersion.lowercase() -> ALPHA
         else -> STABLE
     }
-
     modLoaders.add("fabric")
 
+    dryRun = modrinthToken.isNullOrBlank() || githubToken.isNullOrBlank()
+
     modrinth {
-        accessToken = property("modrinth.token").toString()
+        accessToken = modrinthToken
         projectId = sc.properties.get<String>("publish.modrinth.id")
 
         val mcReleases = sc.properties.rawOrNull("mod:mc_releases")?.asList()?.map { it.toString() }
@@ -129,7 +133,7 @@ publishMods {
 
     // github release is created in `stonecutter.gradle.kts`
     github {
-        accessToken = property("github.token").toString()
+        accessToken = githubToken
         parent(rootProject.tasks.named("publishGithub"))
     }
 }

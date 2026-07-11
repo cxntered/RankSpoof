@@ -1,5 +1,3 @@
-import me.modmuss50.mpp.ReleaseType
-
 plugins {
     id("dev.kikugie.stonecutter")
     id("me.modmuss50.mod-publish-plugin") version "2.1.1"
@@ -19,20 +17,26 @@ stonecutter {
     tasks.order("publishModrinth")
 }
 
-publishMods.github {
+val githubToken: String? = findProperty("github.token")?.toString()
+
+publishMods {
     displayName = "$modName $modVersion"
     version = "v${modVersion}"
     changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
     type = when {
-        "beta" in modVersion.lowercase() -> ReleaseType.BETA
-        "alpha" in modVersion.lowercase() -> ReleaseType.ALPHA
-        else -> ReleaseType.STABLE
+        "beta" in modVersion.lowercase() -> BETA
+        "alpha" in modVersion.lowercase() -> ALPHA
+        else -> STABLE
     }
 
-    accessToken = property("github.token").toString()
-    repository = sc.properties.get<String>("publish.github.repo")
-    commitish = sc.properties.get<String>("publish.github.branch")
-    tagName = version
+    dryRun = githubToken.isNullOrBlank()
 
-    allowEmptyFiles = true
+    github {
+        accessToken = githubToken
+        repository = sc.properties.get<String>("publish.github.repo")
+        commitish = sc.properties.get<String>("publish.github.branch")
+        tagName = version
+
+        allowEmptyFiles = true
+    }
 }
