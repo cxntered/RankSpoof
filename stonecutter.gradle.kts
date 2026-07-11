@@ -13,8 +13,8 @@ stonecutter active "1.21.11"
 
 stonecutter {
     parameters {
-        swaps["mod_version"] = "\"${modVersion}\";"
-        swaps["minecraft"] = "\"${node.metadata.version}\";"
+        swaps["mod_id"] = "\"${sc.properties.get<String>("mod.id")}\";"
+        swaps["mod_name"] = "\"${modName}\";"
     }
 
     tasks.order("publishModrinth")

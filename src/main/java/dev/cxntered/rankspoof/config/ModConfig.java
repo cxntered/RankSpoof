@@ -1,5 +1,6 @@
 package dev.cxntered.rankspoof.config;
 
+import dev.cxntered.rankspoof.RankSpoof;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -20,7 +21,7 @@ import net.minecraft.network.chat.Style;
 public class ModConfig {
     public static final ConfigClassHandler<ModConfig> CONFIG = ConfigClassHandler.createBuilder(ModConfig.class)
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
-                    .setPath(YACLPlatform.getConfigDir().resolve("rankspoof.json"))
+                    .setPath(YACLPlatform.getConfigDir().resolve(RankSpoof.ID + ".json"))
                     .build())
             .build();
 
@@ -31,7 +32,7 @@ public class ModConfig {
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
-                .title(Component.literal("RankSpoof"))
+                .title(Component.literal(RankSpoof.NAME))
                 .category(ConfigCategory.createBuilder()
                         .name(Component.literal("Settings"))
                         .option(Option.<Boolean>createBuilder()
