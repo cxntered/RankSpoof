@@ -27,10 +27,8 @@ public class RankComponentModifier {
         String username = Minecraft.getInstance().getUser().getName();
         if (!component.getString().contains(username)) return component;
 
-        String rank = ModConfig.CONFIG.instance().spoofedRank.replace('&', '§');
-        Component spoofedRankWithName = ComponentConverter.fromLegacyFormatting(rank + " " + username);
         List<Component> siblings = component.getSiblings();
-        MutableComponent result = MutableComponent.create(component.getContents()).setStyle(component.getStyle());
+        MutableComponent result = component.plainCopy().setStyle(component.getStyle());
 
         for (int i = 0; i < siblings.size(); i++) {
             Component sibling = siblings.get(i);
@@ -41,7 +39,7 @@ public class RankComponentModifier {
             if (RANK_START_PATTERN.matcher(string).find()) {
                 int rankEndOffset = findRankEndOffset(siblings, i, username);
                 if (rankEndOffset >= 0) {
-                    result.append(applyInheritedStyle(spoofedRankWithName, style));
+                    result.append(applyInheritedStyle(ModConfig.getRankWithUsername(), style));
                     i += rankEndOffset;
                     continue;
                 }
@@ -52,10 +50,10 @@ public class RankComponentModifier {
                 if (isPlayerInTeam(siblings, i)) return component;
 
                 if (isUnrankedPlayer(sibling, component)) {
-                    replaceUsername(result, string, username, style, applyInheritedStyle(spoofedRankWithName, style));
+                    replaceUsername(result, string, username, style, applyInheritedStyle(ModConfig.getRankWithUsername(), style));
                 } else {
                     // rank prefix is omitted; append username with spoofed rank style only
-                    Style rankStyle = spoofedRankWithName.getSiblings().getLast().getStyle();
+                    Style rankStyle = ModConfig.getRankWithUsername().getSiblings().getLast().getStyle();
                     replaceUsername(result, string, username, style, Component.literal(username).setStyle(mergeStyle(rankStyle, style)));
                 }
                 continue;

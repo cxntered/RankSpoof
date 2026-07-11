@@ -1,6 +1,7 @@
 package dev.cxntered.rankspoof.config;
 
 import dev.cxntered.rankspoof.RankSpoof;
+import dev.cxntered.rankspoof.component.ComponentConverter;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -12,6 +13,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import dev.isxander.yacl3.platform.YACLPlatform;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -29,6 +31,23 @@ public class ModConfig {
 
     @SerialEntry public boolean enabled = true;
     @SerialEntry public String spoofedRank = "&c[&6ዞ&c]";
+
+    private static Component rankWithUsername = Component.empty();
+    private static Component rankDisplay = Component.empty();
+    private static String cachedUsername;
+
+    public static Component getRankWithUsername() {
+        String currentName = Minecraft.getInstance().getUser().getName();
+        if (!currentName.equals(cachedUsername)) {
+            cachedUsername = currentName;
+            updateRankComponents();
+        }
+        return rankWithUsername;
+    }
+
+    public static Component getRankDisplay() {
+        return rankDisplay;
+    }
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
@@ -53,14 +72,34 @@ public class ModConfig {
                                                 .customImage(new RankPreview())
                                                 .build()
                                 )
-                                .binding(defaults.spoofedRank, () -> config.spoofedRank, newVal -> config.spoofedRank = newVal)
+                                .binding(defaults.spoofedRank, () -> config.spoofedRank, newVal -> {
+                                    config.spoofedRank = newVal;
+                                    updateRankComponents();
+                                })
                                 .addListener((option, value) -> {
-                                    RankPreview.rank = option.pendingValue();
+                                    RankPreview.spoofedRank = option.pendingValue();
                                 })
                                 .controller(StringControllerBuilder::create)
                                 .build())
                         .build())
         )).generateScreen(parent);
+    }
+
+    public static void updateRankComponents() {
+        String rank = CONFIG.instance().spoofedRank
+                .replace("&&", "\u0000")
+                .replace('&', '§')
+                .replace("\u0000", "&");
+
+        rankWithUsername = ComponentConverter.fromLegacyFormatting(rank + " " + cachedUsername);
+        int open = rank.indexOf('[');
+        int close = rank.lastIndexOf(']');
+        rankDisplay = ComponentConverter.fromLegacyFormatting(
+                // this only removes surrounding square brackets, could be changed to remove other brackets if needed
+                open >= 0 && close > open
+                        ? rank.substring(0, open) + rank.substring(open + 1, close) + rank.substring(close + 1)
+                        : rank
+        );
     }
 
     private static Component buildColorCodesDescription() {

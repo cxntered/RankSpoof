@@ -10,5 +10,6 @@ public class RankSpoof implements ModInitializer {
     @Override
     public void onInitialize() {
         ModConfig.CONFIG.load();
+        ModConfig.updateRankComponents();
     }
 }

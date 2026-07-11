@@ -13,7 +13,7 @@ import net.minecraft.util.FormattedCharSequence;
 import java.util.List;
 
 public class RankPreview implements ImageRenderer {
-    public static String rank;
+    public static String spoofedRank;
     public static boolean isRendering = false;
 
     @Override
@@ -21,7 +21,13 @@ public class RankPreview implements ImageRenderer {
         isRendering = true;
 
         Font font = Minecraft.getInstance().font;
-        Component rankPreview = ComponentConverter.fromLegacyFormatting(rank.replace('&', '§') + " " + Minecraft.getInstance().getUser().getName());
+
+        String rank = spoofedRank
+                .replace("&&", "\u0000")
+                .replace('&', '§')
+                .replace("\u0000", "&");
+        String username = Minecraft.getInstance().getUser().getName();
+        Component rankPreview = ComponentConverter.fromLegacyFormatting(rank + " " + username);
 
         List<FormattedCharSequence> lines = font.split(rankPreview, width - 10);
         int textHeight = lines.size() * font.lineHeight;

@@ -27,11 +27,7 @@ abstract class ClientTextTooltipMixin {
 
             Component firstSibling = component.getSiblings().getFirst();
             if (firstSibling.getString().equals("Rank: ") && firstSibling.getStyle().getColor() == TextColor.fromLegacyFormat(ChatFormatting.GRAY)) {
-                String rank = ModConfig.CONFIG.instance().spoofedRank
-                        .replace('&', '§')
-                        .replace("[", "")
-                        .replace("]", "");
-                this.text = Component.literal("§7Rank: §r").append(ComponentConverter.fromLegacyFormatting(rank)).getVisualOrderText();
+                this.text = Component.literal("§7Rank: §r").append(ModConfig.getRankDisplay()).getVisualOrderText();
             }
         }
     }

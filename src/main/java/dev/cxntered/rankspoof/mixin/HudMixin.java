@@ -3,7 +3,6 @@ package dev.cxntered.rankspoof.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.cxntered.rankspoof.config.ModConfig;
-import dev.cxntered.rankspoof.component.ComponentConverter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.scores.Team;
@@ -25,11 +24,7 @@ abstract class HudMixin {
         MutableComponent component = original.call(team, name);
 
         if (ModConfig.CONFIG.instance().enabled && component.getString().startsWith("Rank: ")) {
-            String rank = ModConfig.CONFIG.instance().spoofedRank
-                    .replace('&', '§')
-                    .replace("[", "")
-                    .replace("]", "");
-            return Component.literal("Rank: ").append(ComponentConverter.fromLegacyFormatting(rank));
+            return Component.literal("Rank: ").append(ModConfig.getRankDisplay());
         }
 
         return component;
