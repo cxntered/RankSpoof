@@ -1,0 +1,24 @@
+mod.name = "RankSpoof"
+mod.id = "rankspoof"
+mod.group = "dev.cxntered"
+mod.version = "2.3.0"
+
+publish.modrinth.id = "9Lyxhh7B"
+publish.github.repo = "cxntered/RankSpoof"
+publish.github.branch = "modern"
+
+deps.fabric_loader = "0.19.3"
+deps.devauth = "1.2.2"
+deps.yacl = "3.8.2"
+
+["1.21.10"]
+mod.mc_min = "1.21.10"
+mod.mc_max = "1.21.10"
+
+deps.mod_menu = "16.0.0"
+
+["1.21.11"]
+mod.mc_min = "1.21.11"
+mod.mc_max = "1.21.11"
+
+deps.mod_menu = "17.0.0-beta.2"

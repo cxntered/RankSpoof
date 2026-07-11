@@ -2,13 +2,13 @@ plugins {
     id("me.modmuss50.mod-publish-plugin")
 }
 
-val modVersion = project.property("mod.version").toString()
+val modVersion: String = sc.properties["mod.version"]
 
-val mcMin = property("mod.mc_min").toString()
-val mcMax = property("mod.mc_max").toString()
+val mcMin: String = sc.properties["mod.mc_min"]
+val mcMax: String = sc.properties["mod.mc_max"]
 val mcDep = if (mcMax.isEmpty()) "~${mcMin}" else ">=${mcMin} <=${mcMax}"
 
-version = "${property("mod.version")}+$mcMin"
+version = "$modVersion+$mcMin"
 base.archivesName = property("mod.name").toString()
 
 val requiredJava = JavaVersion.VERSION_21
@@ -69,12 +69,12 @@ java {
 tasks {
     processResources {
         val props = mapOf(
-            "id" to project.property("mod.id"),
-            "name" to project.property("mod.name"),
+            "id" to sc.properties["mod.id"],
+            "name" to sc.properties["mod.name"],
             "version" to modVersion,
-            "fabric_loader" to project.property("deps.fabric_loader"),
+            "fabric_loader" to sc.properties["deps.fabric_loader"],
             "minecraft" to mcDep,
-            "yacl" to project.property("deps.yacl")
+            "yacl" to sc.properties["deps.yacl"]
         )
         inputs.properties(props)
 
@@ -96,13 +96,18 @@ publishMods {
     file = project.tasks.remapJar.get().archiveFile
     displayName = modVersion
     version = "v$modVersion"
-    type = STABLE
     changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+    type = when {
+        "beta" in modVersion.lowercase() -> BETA
+        "alpha" in modVersion.lowercase() -> ALPHA
+        else -> STABLE
+    }
+
     modLoaders.add("fabric")
 
     modrinth {
-        accessToken = findProperty("modrinth.token").toString()
-        projectId = property("publish.modrinth").toString()
+        accessToken = property("modrinth.token").toString()
+        projectId = sc.properties.get<String>("publish.modrinth.id")
 
         if (mcMax.isEmpty()) {
             minecraftVersions.add(mcMin)
@@ -116,7 +121,7 @@ publishMods {
 
     // github release is created in `stonecutter.gradle.kts`
     github {
-        accessToken = findProperty("github.token").toString()
+        accessToken = property("github.token").toString()
         parent(rootProject.tasks.named("publishGithub"))
     }
 }

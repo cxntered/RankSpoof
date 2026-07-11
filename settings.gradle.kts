@@ -18,4 +18,5 @@ stonecutter {
     }
 }
 
-rootProject.name = "RankSpoof"
+// Configures the root project Gradle name based on the value in `stonecutter.properties.toml`
+rootProject.name = sc.properties["mod.name"]

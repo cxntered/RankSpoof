@@ -6,8 +6,10 @@ plugins {
     id("me.modmuss50.mod-publish-plugin") version "2.1.1"
 }
 
+val modName: String = sc.properties["mod.name"]
+val modVersion: String = sc.properties["mod.version"]
+
 stonecutter active "1.21.11"
-val modVersion = property("mod.version").toString()
 
 stonecutter {
     parameters {
@@ -15,20 +17,22 @@ stonecutter {
         swaps["minecraft"] = "\"${node.metadata.version}\";"
     }
 
-    tasks {
-        order("publishModrinth")
-    }
+    tasks.order("publishModrinth")
 }
 
 publishMods.github {
-    displayName = "${property("mod.name")} $modVersion"
-    version = "v$modVersion"
-    type = ReleaseType.STABLE
+    displayName = "$modName $modVersion"
+    version = "v${modVersion}"
     changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+    type = when {
+        "beta" in modVersion.lowercase() -> ReleaseType.BETA
+        "alpha" in modVersion.lowercase() -> ReleaseType.ALPHA
+        else -> ReleaseType.STABLE
+    }
 
-    accessToken = findProperty("github.token").toString()
-    repository = property("publish.github.repo").toString()
-    commitish = property("publish.github.branch").toString()
+    accessToken = property("github.token").toString()
+    repository = sc.properties.get<String>("publish.github.repo")
+    commitish = sc.properties.get<String>("publish.github.branch")
     tagName = version
 
     allowEmptyFiles = true
