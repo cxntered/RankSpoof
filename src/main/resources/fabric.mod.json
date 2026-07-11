@@ -3,17 +3,17 @@
 	"id": "${id}",
 	"version": "${version}",
 	"name": "${name}",
-	"description": "A mod to spoof your Hypixel Rank.",
+	"description": "${description}",
 	"authors": [
 		"cxntered"
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/rankspoof",
-		"sources": "https://github.com/cxntered/RankSpoof/tree/modern",
+		"sources": "https://github.com/cxntered/RankSpoof",
 		"issues": "https://github.com/cxntered/RankSpoof/issues"
 	},
 	"license": "GPL-3.0-or-later",
-	"icon": "assets/rankspoof/icon.png",
+	"icon": "assets/${id}/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"main": [
@@ -24,17 +24,17 @@
 		]
 	},
 	"mixins": [
-		"rankspoof.mixins.json"
+		"${id}.mixins.json"
 	],
 	"depends": {
-		"fabricloader": "${fabric_loader}",
-		"minecraft": "${minecraft}",
-		"yet_another_config_lib_v3": "${yacl}"
+		"minecraft": "${mc_compat}",
+		"fabricloader": ">=0.17",
+		"yet_another_config_lib_v3": ">=${yacl}"
 	},
 	"custom": {
 		"modmenu": {
 			"links": {
-				"modmenu.modrinth": "https://modrinth.com/mod/rankspoof"
+				"modmenu.modrinth": "https://modrinth.com/mod/${id}"
 			}
 		}
 	}

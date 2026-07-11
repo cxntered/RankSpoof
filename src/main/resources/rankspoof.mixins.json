@@ -1,11 +1,11 @@
 {
 	"required": true,
 	"package": "dev.cxntered.rankspoof.mixin",
-	"compatibilityLevel": "JAVA_21",
+	"compatibilityLevel": "${java}",
 	"client": [
 		"FontMixin",
 		"ComponentRenderUtilsMixin",
-		"GuiMixin",
+		"HudMixin",
 		"ClientTextTooltipMixin"
 	],
 	"injectors": {

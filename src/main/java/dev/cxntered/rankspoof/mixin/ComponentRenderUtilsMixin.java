@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(ComponentRenderUtils.class)
-public abstract class ComponentRenderUtilsMixin {
+abstract class ComponentRenderUtilsMixin {
     @ModifyArg(
             method = "wrapComponents",
             at = @At(

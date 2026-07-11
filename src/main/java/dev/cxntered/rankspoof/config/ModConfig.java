@@ -18,6 +18,8 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
+import java.util.Locale;
+
 public class ModConfig {
     public static final ConfigClassHandler<ModConfig> CONFIG = ConfigClassHandler.createBuilder(ModConfig.class)
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
@@ -25,10 +27,8 @@ public class ModConfig {
                     .build())
             .build();
 
-    @SerialEntry
-    public boolean enabled = true;
-    @SerialEntry
-    public String spoofedRank = "&c[&6ዞ&c]";
+    @SerialEntry public boolean enabled = true;
+    @SerialEntry public String spoofedRank = "&c[&6ዞ&c]";
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
@@ -37,7 +37,7 @@ public class ModConfig {
                         .name(Component.literal("Settings"))
                         .option(Option.<Boolean>createBuilder()
                                 .name(Component.literal("Enabled"))
-                                .description(OptionDescription.of(Component.literal("Enable or disable the mod")))
+                                .description(OptionDescription.of(Component.literal("Enable or disable the mod.")))
                                 .binding(defaults.enabled, () -> config.enabled, newVal -> config.enabled = newVal)
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
@@ -64,15 +64,15 @@ public class ModConfig {
     }
 
     private static Component buildColorCodesDescription() {
-        MutableComponent description = Component.literal("§lAvailable color codes (hover for info)§r\n");
+        MutableComponent description = Component.literal("§lColor Codes§r (hover for info):\n");
         int count = 0;
 
         description.append(
-                Component.literal("#§cRR§aGG§9BB\n")
+                Component.literal("§7#§cRR§aGG§9BB\n")
                         .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal("RGB Color (Hex Code)"))))
         );
         for (ChatFormatting formatting : ChatFormatting.values()) {
-            if (formatting.isColor()) {
+            if (formatting.ordinal() < ChatFormatting.OBFUSCATED.ordinal()) {
                 description.append(createFormattingDisplay(formatting));
                 if (++count % 4 == 0) description.append(Component.literal("\n"));
             }
@@ -82,10 +82,10 @@ public class ModConfig {
     }
 
     private static Component buildFormattingCodesDescription() {
-        MutableComponent description = Component.literal("§lAvailable formatting codes (hover for info)§r\n");
+        MutableComponent description = Component.literal("§lFormatting Codes§r (hover for info):\n");
 
         for (ChatFormatting formatting : ChatFormatting.values()) {
-            if (!formatting.isColor()) {
+            if (formatting.ordinal() >= ChatFormatting.OBFUSCATED.ordinal()) {
                 description.append(createFormattingDisplay(formatting));
                 description.append(Component.literal("\n"));
             }
@@ -95,25 +95,25 @@ public class ModConfig {
     }
 
     private static Component createFormattingDisplay(ChatFormatting formatting) {
-        String name = toTitleCase(formatting.getName());
+        String name = toTitleCase(formatting.name());
 
-        if (formatting.isColor()) {
-            return Component.literal(formatting.toString() + formatting.getChar() + " ")
+        if (formatting.ordinal() < ChatFormatting.OBFUSCATED.ordinal()) {
+            return Component.literal(formatting.toString() + formatting.toString().charAt(1) + " ")
                     .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(name))));
         } else {
-            return Component.literal(formatting.getChar() + ": " + formatting + name + "§r")
+            return Component.literal(formatting.toString().charAt(1) + ": " + formatting + name + "§r")
                     .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(name))));
         }
     }
 
     private static String toTitleCase(String input) {
-        String[] words = input.toLowerCase().split("_");
+        String[] words = input.toLowerCase(Locale.ROOT).split("_");
         StringBuilder titleCase = new StringBuilder();
         for (String word : words) {
+            if (!titleCase.isEmpty()) titleCase.append(" ");
             titleCase.append(Character.toUpperCase(word.charAt(0)))
-                    .append(word.substring(1))
-                    .append(" ");
+                    .append(word.substring(1));
         }
-        return titleCase.toString().trim();
+        return titleCase.toString();
     }
 }

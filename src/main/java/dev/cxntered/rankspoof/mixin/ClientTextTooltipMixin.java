@@ -16,19 +16,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientTextTooltip.class)
-public abstract class ClientTextTooltipMixin {
-    @Shadow
-    @Final
-    @Mutable
-    private FormattedCharSequence text;
+abstract class ClientTextTooltipMixin {
+    @Shadow @Final @Mutable private FormattedCharSequence text;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void spoofTooltipRank(FormattedCharSequence formattedCharSequence, CallbackInfo ci) {
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void spoofTooltipRank(FormattedCharSequence text, CallbackInfo ci) {
         if (ModConfig.CONFIG.instance().enabled) {
-            Component text = ComponentConverter.fromFormattedCharSequence(formattedCharSequence);
-            if (text.getSiblings().isEmpty()) return;
+            Component component = ComponentConverter.fromFormattedCharSequence(text);
+            if (component.getSiblings().isEmpty()) return;
 
-            Component firstSibling = text.getSiblings().getFirst();
+            Component firstSibling = component.getSiblings().getFirst();
             if (firstSibling.getString().equals("Rank: ") && firstSibling.getStyle().getColor() == TextColor.fromLegacyFormat(ChatFormatting.GRAY)) {
                 String rank = ModConfig.CONFIG.instance().spoofedRank
                         .replace('&', '§')

@@ -2,14 +2,13 @@ import me.modmuss50.mpp.ReleaseType
 
 plugins {
     id("dev.kikugie.stonecutter")
-    id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT" apply false
     id("me.modmuss50.mod-publish-plugin") version "2.1.1"
 }
 
 val modName: String = sc.properties["mod.name"]
 val modVersion: String = sc.properties["mod.version"]
 
-stonecutter active "1.21.11"
+stonecutter active "26.2"
 
 stonecutter {
     parameters {

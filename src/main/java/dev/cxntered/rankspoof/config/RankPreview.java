@@ -1,10 +1,11 @@
 package dev.cxntered.rankspoof.config;
 
+//~ if <26.1 'GuiGraphicsExtractor' -> 'GuiGraphics' {
 import dev.cxntered.rankspoof.component.ComponentConverter;
 import dev.isxander.yacl3.gui.image.ImageRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -16,7 +17,7 @@ public class RankPreview implements ImageRenderer {
     public static boolean isRendering = false;
 
     @Override
-    public int render(GuiGraphics guiGraphics, int x, int y, int width, float v) {
+    public int render(GuiGraphicsExtractor graphics, int x, int y, int width, float v) {
         isRendering = true;
 
         Font font = Minecraft.getInstance().font;
@@ -26,13 +27,13 @@ public class RankPreview implements ImageRenderer {
         int textHeight = lines.size() * font.lineHeight;
         int totalHeight = textHeight + 10;
 
-        TooltipRenderUtil.renderTooltipBackground(
-                guiGraphics,
+        //~ if <26.1 '.extractTooltipBackground' -> '.renderTooltipBackground'
+        TooltipRenderUtil.extractTooltipBackground(
+                graphics,
                 x + 5,
                 y + 5,
                 width - 10,
                 totalHeight - 10,
-                /*? if 1.21.4 {*/ /*0, *//*?}*/
                 null
         );
 
@@ -40,7 +41,8 @@ public class RankPreview implements ImageRenderer {
         for (FormattedCharSequence line : lines) {
             int lineWidth = font.width(line);
             int centeredX = x + 5 + ((width - 10) - lineWidth) / 2;
-            guiGraphics.drawString(font, line, centeredX, textY, -1);
+            //~ if <26.1 '.text' -> '.drawString'
+            graphics.text(font, line, centeredX, textY, -1);
             textY += font.lineHeight;
         }
 
@@ -52,3 +54,4 @@ public class RankPreview implements ImageRenderer {
     public void close() {
     }
 }
+//~}

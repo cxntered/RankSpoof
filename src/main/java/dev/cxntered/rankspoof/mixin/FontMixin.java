@@ -11,8 +11,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+@SuppressWarnings("ModifyVariableMayUseName") // suppress while we still support unobfuscated
 @Mixin(Font.class)
-public abstract class FontMixin {
+abstract class FontMixin {
     @ModifyVariable(
             //? if >=1.21.11 {
             method = "prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZZI)Lnet/minecraft/client/gui/Font$PreparedText;",
@@ -21,10 +22,10 @@ public abstract class FontMixin {
             at = @At(value = "HEAD"),
             argsOnly = true
     )
-    private FormattedCharSequence spoofPrepareText(FormattedCharSequence formattedCharSequence) {
+    private FormattedCharSequence spoofPrepareText(FormattedCharSequence text) {
         if (ModConfig.CONFIG.instance().enabled && !RankPreview.isRendering)
-            return RankComponentModifier.replaceRank(ComponentConverter.fromFormattedCharSequence(formattedCharSequence)).getVisualOrderText();
-        return formattedCharSequence;
+            return RankComponentModifier.replaceRank(ComponentConverter.fromFormattedCharSequence(text)).getVisualOrderText();
+        return text;
     }
 
     @ModifyVariable(
@@ -32,10 +33,10 @@ public abstract class FontMixin {
             at = @At(value = "HEAD"),
             argsOnly = true
     )
-    private FormattedCharSequence spoofWidth$FormattedCharSequence(FormattedCharSequence formattedCharSequence) {
+    private FormattedCharSequence spoofWidth$FormattedCharSequence(FormattedCharSequence text) {
         if (ModConfig.CONFIG.instance().enabled && !RankPreview.isRendering)
-            return RankComponentModifier.replaceRank(ComponentConverter.fromFormattedCharSequence(formattedCharSequence)).getVisualOrderText();
-        return formattedCharSequence;
+            return RankComponentModifier.replaceRank(ComponentConverter.fromFormattedCharSequence(text)).getVisualOrderText();
+        return text;
     }
 
     @ModifyVariable(
@@ -43,9 +44,9 @@ public abstract class FontMixin {
             at = @At(value = "HEAD"),
             argsOnly = true
     )
-    private FormattedText spoofWidth$FormattedText(FormattedText formattedText) {
+    private FormattedText spoofWidth$FormattedText(FormattedText text) {
         if (ModConfig.CONFIG.instance().enabled && !RankPreview.isRendering)
-            return RankComponentModifier.replaceRank(ComponentConverter.fromFormattedText(formattedText));
-        return formattedText;
+            return RankComponentModifier.replaceRank(ComponentConverter.fromFormattedText(text));
+        return text;
     }
 }
