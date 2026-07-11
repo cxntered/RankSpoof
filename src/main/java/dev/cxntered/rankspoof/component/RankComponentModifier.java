@@ -40,6 +40,13 @@ public class RankComponentModifier {
                 int rankEndOffset = findRankEndOffset(siblings, i, username);
                 if (rankEndOffset >= 0) {
                     result.append(applyInheritedStyle(ModConfig.getRankWithUsername(), style));
+
+                    // add a space after the username for any tags (guild tag, housing rank, etc.)
+                    Component lastRankComponent = siblings.get(i + rankEndOffset);
+                    if (lastRankComponent.getString().endsWith(username + " ")) {
+                        result.append(Component.literal(" ").setStyle(lastRankComponent.getStyle()));
+                    }
+
                     i += rankEndOffset;
                     continue;
                 }
@@ -77,10 +84,13 @@ public class RankComponentModifier {
             // don't slide past a sibling that starts a prefix (e.g. "[RED] " then "[VIP] ")
             if (offset > 0 && text.contains("[")) break;
 
-            if (text.endsWith("] " + username)) {
+            if (text.endsWith("] " + username) || text.endsWith("] " + username + " ")) {
                 return offset; // username is in the same sibling as last rank part
-            } else if (text.endsWith("] ") && i + offset + 1 < siblings.size() && siblings.get(i + offset + 1).getString().equals(username)) {
-                return offset + 1; // username is in sibling after last rank part
+            } else if (text.endsWith("] ") && i + offset + 1 < siblings.size()) {
+                String nextText = siblings.get(i + offset + 1).getString();
+                if (nextText.equals(username) || nextText.equals(username + " ")) {
+                    return offset + 1; // username is in sibling after last rank part
+                }
             }
         }
 
