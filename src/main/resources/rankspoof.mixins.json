@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "dev.cxntered.rankspoof.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
+  "client": [
+    "InGameHudMixin",
+    "ScreenMixin",
+    "TextRendererMixin",
+    "TextsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

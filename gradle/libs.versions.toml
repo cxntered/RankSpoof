@@ -1,0 +1,19 @@
+[versions]
+loom = "1.17-SNAPSHOT"
+mod-publish = "2.2.0"
+minecraft = "1.8.9"
+fabric-loader = "0.19.5"
+legacy-yarn = "1.8.9+build.4"
+devauth = "1.2.2"
+osl = "0.21.0"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+legacy-yarn = { module = "net.legacyfabric:legacy-yarn", version.ref = "legacy-yarn" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth" }
+
+[plugins]
+fabric-loom = { id = "net.fabricmc.fabric-loom-remap", version.ref = "loom" }
+ploceus = { id = "ploceus", version.ref = "loom" }
+mod-publish = { id = "me.modmuss50.mod-publish-plugin", version.ref = "mod-publish" }

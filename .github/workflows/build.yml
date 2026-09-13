@@ -1,29 +1,42 @@
-name: Run Gradle Build
-on:
-  - push
-  - pull_request
+name: Build
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+concurrency:
+  # Maximum of one running workflow per pull request source branch
+  # or branch and run number combination (cancels old run if action is rerun)
+  group: ${{ github.head_ref || format('{0}-{1}', github.ref, github.run_number) }}
+  cancel-in-progress: true
 
 jobs:
-  gradle:
+  build:
+    name: Build ${{ matrix.version }}
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup JDK
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 25
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
 
-      - name: Execute Gradle build
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build mod
         run: ./gradlew build
 
-      - name: Upload built mod JAR
-        uses: actions/upload-artifact@v4
+      - name: Upload built mod jar
+        uses: actions/upload-artifact@v7
         with:
-          name: mod-jar
           path: build/libs/*.jar
+          archive: false
