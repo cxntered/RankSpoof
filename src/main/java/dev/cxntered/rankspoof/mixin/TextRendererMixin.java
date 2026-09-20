@@ -10,14 +10,14 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(value = TextRenderer.class, priority = 998)
 abstract class TextRendererMixin {
     @ModifyVariable(method = "drawLayer(Ljava/lang/String;FFIZ)I", at = @At("HEAD"), argsOnly = true)
-    private String rankspoof$spoofRenderString(String string) {
+    private String spoofDrawLayer(String string) {
         if (string == null) return null;
         if (ModConfig.enabled.get()) return RankSpoof.getSpoofedText(string);
         return string;
     }
 
     @ModifyVariable(method = "getStringWidth", at = @At("HEAD"), argsOnly = true)
-    private String rankspoof$spoofGetStringWidth(String string) {
+    private String spoofGetStringWidth(String string) {
         if (string == null) return null;
         if (ModConfig.enabled.get()) return RankSpoof.getSpoofedText(string);
         return string;

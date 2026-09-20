@@ -14,7 +14,7 @@ abstract class TextsMixin {
     @Definition(id = "computeValue", method = "Lnet/minecraft/text/Text;computeValue()Ljava/lang/String;")
     @Expression("? = ?.computeValue()")
     @ModifyVariable(method = "wrapLines", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER))
-    private static String rankspoof$spoofSplitText(String string) {
+    private static String spoofWrapLines(String string) {
         if (string == null) return null;
         if (ModConfig.enabled.get()) return RankSpoof.getSpoofedText(string);
         return string;

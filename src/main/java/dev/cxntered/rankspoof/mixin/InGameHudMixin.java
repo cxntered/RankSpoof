@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(InGameHud.class)
 abstract class InGameHudMixin {
     @WrapOperation(method = "renderScoreboardObjective", at = @At(value = "INVOKE", target = "Lnet/minecraft/scoreboard/Team;decorateName(Lnet/minecraft/scoreboard/AbstractTeam;Ljava/lang/String;)Ljava/lang/String;"))
-    private String rankspoof$spoofScoreboardRank(AbstractTeam abstractTeam, String string, Operation<String> original) {
+    private String spoofScoreboardRank(AbstractTeam abstractTeam, String string, Operation<String> original) {
         String formattedString = original.call(abstractTeam, string);
 
         if (ModConfig.enabled.get() && formattedString.startsWith("Rank: ")) {

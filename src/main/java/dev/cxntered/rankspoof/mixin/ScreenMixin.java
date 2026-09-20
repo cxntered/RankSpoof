@@ -14,7 +14,7 @@ import java.util.List;
 @Mixin(Screen.class)
 abstract class ScreenMixin {
     @WrapOperation(method = "renderTooltip(Lnet/minecraft/item/ItemStack;II)V", at = @At(value = "INVOKE", target = "Ljava/util/List;set(ILjava/lang/Object;)Ljava/lang/Object;", ordinal = 1))
-    private Object rankspoof$spoofTooltipRank(List<String> list, int i, Object object, Operation<Object> original, @Local(argsOnly = true) ItemStack stack) {
+    private Object spoofTooltipRank(List<String> list, int i, Object object, Operation<Object> original, @Local(argsOnly = true) ItemStack stack) {
         if (ModConfig.enabled.get() && stack.getCustomName().equals("§aCharacter Information")) {
             if (!list.get(i).startsWith("§5§o§7Rank: ")) return original.call(list, i, object);
 
