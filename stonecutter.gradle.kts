@@ -6,7 +6,7 @@ plugins {
 val modName: String = sc.properties["mod.name"]
 val modVersion: String = sc.properties["mod.version"]
 
-stonecutter active "26.2"
+stonecutter active "26.3"
 
 stonecutter {
     parameters {

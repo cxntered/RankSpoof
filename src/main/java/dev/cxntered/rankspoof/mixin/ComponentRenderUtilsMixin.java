@@ -1,8 +1,8 @@
 package dev.cxntered.rankspoof.mixin;
 
-import dev.cxntered.rankspoof.config.ModConfig;
-import dev.cxntered.rankspoof.component.RankComponentModifier;
 import dev.cxntered.rankspoof.component.ComponentConverter;
+import dev.cxntered.rankspoof.component.RankComponentModifier;
+import dev.cxntered.rankspoof.config.ModConfig;
 import net.minecraft.client.gui.components.ComponentRenderUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;

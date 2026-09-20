@@ -8,7 +8,7 @@ publish.modrinth.id = "9Lyxhh7B"
 publish.github.repo = "cxntered/RankSpoof"
 publish.github.branch = "modern"
 
-deps.fabric_loader = "0.19.3"
+deps.fabric_loader = "0.19.5"
 deps.devauth = "1.2.2"
 loomx.loom_version = "1.17-SNAPSHOT"
 
@@ -39,3 +39,10 @@ mod.mc_releases = ["26.2"]
 
 deps.yacl = "3.9.5"
 deps.mod_menu = "20.0.0-beta.4"
+
+["26.3"]
+mod.mc_compat = "~26.3"
+mod.mc_releases = ["26.3"]
+
+deps.yacl = "3.9.6"
+deps.mod_menu = "21.0.0-beta.1"

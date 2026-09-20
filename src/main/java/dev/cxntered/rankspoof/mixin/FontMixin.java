@@ -1,9 +1,9 @@
 package dev.cxntered.rankspoof.mixin;
 
-import dev.cxntered.rankspoof.config.ModConfig;
-import dev.cxntered.rankspoof.config.RankPreview;
 import dev.cxntered.rankspoof.component.ComponentConverter;
 import dev.cxntered.rankspoof.component.RankComponentModifier;
+import dev.cxntered.rankspoof.config.ModConfig;
+import dev.cxntered.rankspoof.config.RankPreview;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@SuppressWarnings("ModifyVariableMayUseName") // suppress while we still support unobfuscated
+@SuppressWarnings("ModifyVariableMayUseName") // suppress while we still support obfuscated
 @Mixin(Font.class)
 abstract class FontMixin {
     @ModifyVariable(
