@@ -1,41 +1,41 @@
 {
-	"schemaVersion": 1,
-	"id": "${id}",
-	"version": "${version}",
-	"name": "${name}",
-	"description": "${description}",
-	"authors": [
-		"cxntered"
-	],
-	"contact": {
-		"homepage": "https://modrinth.com/mod/rankspoof",
-		"sources": "https://github.com/cxntered/RankSpoof",
-		"issues": "https://github.com/cxntered/RankSpoof/issues"
-	},
-	"license": "GPL-3.0-or-later",
-	"icon": "assets/${id}/icon.png",
-	"environment": "client",
-	"entrypoints": {
-		"main": [
-			"dev.cxntered.rankspoof.RankSpoof"
-		],
-		"modmenu": [
-			"dev.cxntered.rankspoof.config.ModMenuIntegration"
-		]
-	},
-	"mixins": [
-		"${id}.mixins.json"
-	],
-	"depends": {
-		"minecraft": "${mc_compat}",
-		"fabricloader": ">=0.17",
-		"yet_another_config_lib_v3": ">=${yacl}"
-	},
-	"custom": {
-		"modmenu": {
-			"links": {
-				"modmenu.modrinth": "https://modrinth.com/mod/${id}"
-			}
-		}
-	}
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": [
+    "cxntered"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/${id}",
+    "sources": "https://github.com/cxntered/${name}",
+    "issues": "https://github.com/cxntered/${name}/issues"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.modrinth": "https://modrinth.com/mod/${id}"
+      }
+    }
+  },
+  "license": "GPL-3.0-or-later",
+  "icon": "assets/${id}/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "dev.cxntered.rankspoof.RankSpoof"
+    ],
+    "modmenu": [
+      "dev.cxntered.rankspoof.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "${id}.mixins.json"
+  ],
+  "depends": {
+    "minecraft": "${mc_compat}",
+    "fabricloader": ">=0.17.0",
+    "yet_another_config_lib_v3": ">=${yacl}"
+  }
 }

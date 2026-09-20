@@ -7,8 +7,8 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.9.6"
-    id("dev.kikugie.loom-back-compat") version "0.3"
+    id("dev.kikugie.stonecutter") version "0.9.8"
+    id("dev.kikugie.loom-back-compat") version "0.4.2"
 }
 
 stonecutter {
@@ -18,5 +18,4 @@ stonecutter {
     }
 }
 
-// Configures the root project Gradle name based on the value in `stonecutter.properties.toml`
 rootProject.name = sc.properties["mod.name"]

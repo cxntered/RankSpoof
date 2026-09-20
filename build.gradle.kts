@@ -46,6 +46,7 @@ loom {
 
         runConfigs.named("client") {
             generateRunConfig = true
+            preferGradleTask = true
             runDirectory = rootProject.file("run")
 
             jvmArguments.add("-XX:+AllowEnhancedClassRedefinition")
@@ -70,19 +71,25 @@ java {
 
 tasks {
     processResources {
-        val props = mapOf(
-            "id" to sc.properties["mod.id"],
-            "version" to modVersion,
-            "name" to modName,
-            "description" to sc.properties["mod.description"],
-            "mc_compat" to (sc.properties.getOrNull<String>("mod.mc_compat") ?: sc.current.version),
-            "yacl" to sc.properties["deps.yacl"]
-        )
+        fun MutableMap<String, String>.register(key: String, property: String) {
+            val value: String = sc.properties[property]
+            inputs.property(key, value)
+            set(key, value)
+        }
 
-        inputs.properties(props)
+        val props = buildMap {
+            register("id", "mod.id")
+            register("version", "mod.version")
+            register("name", "mod.name")
+            register("description", "mod.description")
+            register("mc_compat", "mod.mc_compat")
+            register("yacl", "deps.yacl")
+        }
 
         filesMatching("fabric.mod.json") { expand(props) }
-        filesMatching("*.mixins.json") { expand("java" to "JAVA_${requiredJava.majorVersion}") }
+
+        val mixinJava = "JAVA_${requiredJava.majorVersion}"
+        filesMatching("*.mixins.json") { expand("java" to mixinJava) }
     }
 
     jar {
@@ -124,9 +131,7 @@ publishMods {
         accessToken = modrinthToken
         projectId = sc.properties.get<String>("publish.modrinth.id")
 
-        val mcReleases = sc.properties.rawOrNull("mod:mc_releases")?.asList()?.map { it.toString() }
-        minecraftVersions.addAll(mcReleases ?: listOf(sc.current.version))
-
+        minecraftVersions.addAll(sc.properties.raw("mod:mc_releases").asList().map { it.toString() })
         requires("yacl")
         optional("modmenu")
     }
