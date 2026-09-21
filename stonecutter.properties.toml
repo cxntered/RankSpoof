@@ -2,7 +2,7 @@ mod.name = "RankSpoof"
 mod.description = "A mod to spoof your Hypixel Rank."
 mod.id = "rankspoof"
 mod.group = "dev.cxntered"
-mod.version = "2.3.0"
+mod.version = "2.4.0"
 
 publish.modrinth.id = "9Lyxhh7B"
 publish.github.repo = "cxntered/RankSpoof"
