@@ -79,21 +79,23 @@ publishMods {
     val modVersion = property("mod.version") as String
     displayName = "$modName $modVersion"
     version = "v$modVersion"
+    changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
     type = when {
         "beta" in modVersion.lowercase() -> BETA
         "alpha" in modVersion.lowercase() -> ALPHA
         else -> STABLE
     }
 
-    changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
-    modLoaders.add("ornithe")
 
     dryRun = modrinthToken.isNullOrBlank() || githubToken.isNullOrBlank()
 
     modrinth {
         accessToken = modrinthToken
         projectId = property("publish.modrinth.id") as String
+
         minecraftVersions.add(property("mod.mc_version") as String)
+        modLoaders.add("ornithe")
+        requires("osl")
     }
 
     github {
