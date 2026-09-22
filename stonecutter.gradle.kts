@@ -1,17 +1,17 @@
 plugins {
     id("dev.kikugie.stonecutter")
-    id("me.modmuss50.mod-publish-plugin") version "2.1.1"
+    id("me.modmuss50.mod-publish-plugin") version "2.2.1"
 }
 
 val modName: String = sc.properties["mod.name"]
 val modVersion: String = sc.properties["mod.version"]
 
-stonecutter active "26.3"
+stonecutter active "26.2"
 
 stonecutter {
     parameters {
         swaps["mod_id"] = "\"${sc.properties.get<String>("mod.id")}\";"
-        swaps["mod_name"] = "\"${modName}\";"
+        swaps["mod_name"] = "\"$modName\";"
     }
 
     tasks.order("publishModrinth")
@@ -21,7 +21,7 @@ val githubToken: String? = findProperty("github.token")?.toString()
 
 publishMods {
     displayName = "$modName $modVersion"
-    version = "v${modVersion}"
+    version = "v$modVersion"
     changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
     type = when {
         "beta" in modVersion.lowercase() -> BETA

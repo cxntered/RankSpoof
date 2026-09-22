@@ -34,15 +34,8 @@ deps.yacl = "3.9.5"
 deps.mod_menu = "18.0.0-beta.1"
 
 ["26.2"]
-mod.mc_compat = "~26.2"
-mod.mc_releases = ["26.2"]
+mod.mc_compat = ">=26.2 <26.4"
+mod.mc_releases = ["26.2", "26.3"]
 
 deps.yacl = "3.9.5"
 deps.mod_menu = "20.0.0-beta.4"
-
-["26.3"]
-mod.mc_compat = "~26.3"
-mod.mc_releases = ["26.3"]
-
-deps.yacl = "3.9.6"
-deps.mod_menu = "21.0.0-beta.1"

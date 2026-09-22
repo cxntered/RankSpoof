@@ -115,7 +115,11 @@ val githubToken: String? = findProperty("github.token")?.toString()
 
 publishMods {
     file = loomx.modJar.get().archiveFile
-    displayName = "$modName $modVersion for ${sc.current.version}"
+
+    val mcReleases = sc.properties.raw("mod:mc_releases").asList().map { it.toString() }
+    val compatibleVersions = mcReleases.singleOrNull() ?: "${mcReleases.first()}-${mcReleases.last()}"
+    displayName = "$modName $modVersion for $compatibleVersions"
+
     version = "v$modVersion"
     changelog = rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
     type = when {
@@ -131,7 +135,7 @@ publishMods {
         accessToken = modrinthToken
         projectId = sc.properties.get<String>("publish.modrinth.id")
 
-        minecraftVersions.addAll(sc.properties.raw("mod:mc_releases").asList().map { it.toString() })
+        minecraftVersions.addAll(mcReleases)
         requires("yacl")
         optional("modmenu")
     }
