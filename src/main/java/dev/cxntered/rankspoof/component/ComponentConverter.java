@@ -14,6 +14,7 @@ public class ComponentConverter {
         StringBuilder buffer = new StringBuilder();
         AtomicReference<Style> currentStyle = new AtomicReference<>();
 
+        //noinspection unused - suppress while we still support versions below 26
         formattedCharSequence.accept((index, style, codePoint) -> {
             if (currentStyle.get() == null) {
                 currentStyle.set(style);

@@ -43,7 +43,7 @@ public class RankComponentModifier {
                     // add a space after the username for any tags (guild tag, housing rank, etc.)
                     Component lastRankComponent = siblings.get(i + rankEndOffset);
                     if (lastRankComponent.getString().endsWith(username + " ")) {
-                        result.append(Component.literal(" ").setStyle(lastRankComponent.getStyle()));
+                        result.append(Component.literal(" "));
                     }
 
                     i += rankEndOffset;
@@ -104,9 +104,9 @@ public class RankComponentModifier {
 
     private static void replaceUsername(MutableComponent result, String original, String username, Style style, Component replacement) {
         String[] parts = original.split(username, 2);
-        result.append(Component.literal(parts[0]).setStyle(style));
+        if (!parts[0].isEmpty()) result.append(Component.literal(parts[0]).setStyle(style));
         result.append(replacement);
-        result.append(Component.literal(parts[1]).setStyle(style));
+        if (!parts[1].isEmpty()) result.append(Component.literal(parts[1]).setStyle(style));
     }
 
     private static boolean isUnrankedPlayer(Component sibling, Component parent) {
