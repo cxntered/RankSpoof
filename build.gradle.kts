@@ -31,6 +31,7 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${property("deps.devauth")}")
+    testImplementation("net.fabricmc:fabric-loader-junit:${property("deps.fabric_loader")}")
 
     modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}+${sc.current.version}-fabric")
     modImplementation("com.terraformersmc:modmenu:${property("deps.mod_menu")}")
@@ -98,6 +99,10 @@ tasks {
         from("LICENSE") {
             rename { "${it}_${inputs.properties["archivesName"]}" }
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     register<Copy>("buildAndCollect") {

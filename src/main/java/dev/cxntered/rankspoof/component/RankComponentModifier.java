@@ -23,8 +23,7 @@ public class RankComponentModifier {
      *  <li>Legacy formatting will not be used</li>
      * </ul>
      */
-    public static Component replaceRank(Component component) {
-        String username = Minecraft.getInstance().getUser().getName();
+    public static Component replaceRank(Component component, String username, Component rankWithUsername) {
         if (!component.getString().contains(username)) return component;
 
         List<Component> siblings = component.getSiblings();
@@ -39,7 +38,7 @@ public class RankComponentModifier {
             if (RANK_START_PATTERN.matcher(string).find()) {
                 int rankEndOffset = findRankEndOffset(siblings, i, username);
                 if (rankEndOffset >= 0) {
-                    result.append(applyInheritedStyle(ModConfig.getRankWithUsername(), style));
+                    result.append(applyInheritedStyle(rankWithUsername, style));
 
                     // add a space after the username for any tags (guild tag, housing rank, etc.)
                     Component lastRankComponent = siblings.get(i + rankEndOffset);
@@ -57,10 +56,10 @@ public class RankComponentModifier {
                 if (isPlayerInTeam(siblings, i)) return component;
 
                 if (isUnrankedPlayer(sibling, component)) {
-                    replaceUsername(result, string, username, style, applyInheritedStyle(ModConfig.getRankWithUsername(), style));
+                    replaceUsername(result, string, username, style, applyInheritedStyle(rankWithUsername, style));
                 } else {
                     // rank prefix is omitted; append username with spoofed rank style only
-                    Style rankStyle = ModConfig.getRankWithUsername().getSiblings().getLast().getStyle();
+                    Style rankStyle = rankWithUsername.getSiblings().getLast().getStyle();
                     replaceUsername(result, string, username, style, Component.literal(username).setStyle(mergeStyle(rankStyle, style)));
                 }
                 continue;
@@ -70,6 +69,12 @@ public class RankComponentModifier {
         }
 
         return result;
+    }
+
+    public static Component replaceRank(Component component) {
+        String username = Minecraft.getInstance().getUser().getName();
+        Component rankWithUsername = ModConfig.getRankWithUsername();
+        return replaceRank(component, username, rankWithUsername);
     }
 
     /**
